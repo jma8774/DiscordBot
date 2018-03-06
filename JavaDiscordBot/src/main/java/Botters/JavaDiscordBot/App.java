@@ -1,9 +1,9 @@
 package Botters.JavaDiscordBot;
 
-import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -39,6 +39,7 @@ public class App extends ListenerAdapter {
     	stop = false;
     	checkCurses(e);
     	if(stop) return;
+    	checkSlap(e);
     	checkHelp(e);
     	checkRoll(e);
     	checkHardstuck(e);
@@ -69,6 +70,22 @@ public class App extends ListenerAdapter {
     }
     }
     }	}
+	
+	private void checkSlap(MessageReceivedEvent e) {
+        if(e.getAuthor().isBot()) return;
+        String slaps = getMention(e) + " slaps ";
+        List<Member> members = e.getMessage().getMentionedMembers();
+        if(e.getMessage().getContentDisplay().startsWith("`") && e.getMessage().getContentDisplay().indexOf("slap") == 1) {
+            for(int i = 0; i < members.size(); i ++) {
+                if(members.size() == 1) {
+                    slaps += members.get(i).getAsMention() + ".";
+                } else {
+                    slaps += i == members.size()-1 ? " and " + members.get(i).getAsMention() + ". " : members.get(i).getAsMention() + ", ";
+                }
+            }
+            sendMessage(e, slaps);
+        }
+    }
 	
 	private void checkHelp(MessageReceivedEvent e) {
 		if(e.getAuthor().isBot()) return;
