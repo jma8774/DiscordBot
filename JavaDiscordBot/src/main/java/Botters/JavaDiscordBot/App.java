@@ -27,7 +27,7 @@ public class App extends ListenerAdapter {
     	
     	if(objMsg.getContentDisplay().equals("hello")) objChannel.sendMessage("Hello, " + objUser.getAsMention() + "!").queue();
     	if(objMsg.getContentDisplay().indexOf("boom") > -1) objChannel.sendMessage(objUser.getAsMention() + " stfu, boom your mom.").queue();
-    	//sup bitchs dasdasdasdasdsadlkasdjj
+    	
     		
     }
 }
