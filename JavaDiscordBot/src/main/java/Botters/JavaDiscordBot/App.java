@@ -27,7 +27,7 @@ public class App extends ListenerAdapter {
     	MessageChannel c = e.getChannel();
     	User u = e.getAuthor();
     	
-    	if(msg.getContentDisplay().equals("hello")) c.sendMessage("Hello, " + u.getAsMention() + "!").queue();
+    	checkGreets(e);
     	if(msg.getContentDisplay().indexOf("boom") > -1 && !u.isBot()) c.sendMessage(u.getAsMention() + " stfu, boom your mom.").queue();
     	
     }
@@ -37,11 +37,13 @@ public class App extends ListenerAdapter {
     	greetings.add("hello");
     	greetings.add("konichiwa");
     	greetings.add("howdy");
+    	greetings.add("ni hao");
+    	greetings.add("hola");
     	
     	if(!e.getAuthor().isBot()) { // if not a bot
     	for(int i = 0; i < greetings.size(); i ++) { // check for all possible greetings
-			if(e.getMessage().getContentDisplay().equals(greetings.get(i))) {
-				e.getChannel().sendMessage(greetings.get(i) + e.getAuthor().getAsMention() + "!").queue();
+			if(e.getMessage().getContentDisplay().toLowerCase().indexOf(greetings.get(i)) > -1) {
+				e.getChannel().sendMessage(greetings.get(i) + " " + e.getAuthor().getAsMention() + "!").queue();
 				break;
 			}
     				
