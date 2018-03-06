@@ -26,7 +26,7 @@ public class App extends ListenerAdapter {
     	User objUser = e.getAuthor();
     	
     	if(objMsg.getContentDisplay().equals("hello")) objChannel.sendMessage("Hello, " + objUser.getAsMention() + "!").queue();
-    	if(objMsg.getContentDisplay().indexOf("boom") > -1 && objUser.getAsMention() != "@jeemonger bot") objChannel.sendMessage(objUser.getAsMention() + " stfu, boom your mom.").queue();
+    	if(objMsg.getContentDisplay().indexOf("boom") > -1) objChannel.sendMessage(objUser.getAsMention() + " stfu, boom your mom.").queue();
     		
     }
 }
