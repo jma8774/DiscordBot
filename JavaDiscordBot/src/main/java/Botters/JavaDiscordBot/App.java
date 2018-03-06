@@ -35,15 +35,15 @@ public class App extends ListenerAdapter {
 //    	Message msg = e.getMessage();
 //    	MessageChannel c = e.getChannel();
 //    	User u = e.getAuthor();
-//    	brianStuff(e);
-    	stop = false;
-    	checkCurses(e);
-    	if(stop) return;
-    	checkSlap(e);
-    	checkHelp(e);
-    	checkRoll(e);
-    	checkHardstuck(e);
-		checkGreets(e);
+    	brianStuff(e);
+    //	stop = false;
+   // 	checkCurses(e);
+    //	if(stop) return;
+   // 	checkSlap(e);
+    //	checkHelp(e);
+    //	checkRoll(e);
+    //	checkHardstuck(e);
+	//	checkGreets(e);
     }
     
 
@@ -53,8 +53,7 @@ public class App extends ListenerAdapter {
 	private void brianStuff(MessageReceivedEvent e)
 	{
 		// TODO Auto-generated method stub
-     if(!e.getAuthor().isBot())	
-     {
+     if(!e.getAuthor().isBot())	{
     	if(e.getMessage().getContentDisplay().equals("test")) {
     		e.getChannel().sendMessage("hello").queue();
     		}
@@ -63,14 +62,26 @@ public class App extends ListenerAdapter {
     		e.getChannel().sendMessage("test2 " + e.getAuthor().getAsMention()).queue();
     		}
     {
-    	java.util.List<Member> members = e.getMessage().getMentionedMembers();
     
-    if(getMessage(e).contains("slap @")) {
-    	sendMessage(e, getMention(e) + "slapped " + members.get(0).getAsMention());
+    
+    String Rollss = getMessage(e).substring(7);
+    int i = Integer.parseInt(Rollss);
+    if(getMessage(e).startsWith("!") && getMessage(e).indexOf("rolls") == 1) {
+    	System.out.println(i);
+    	sendMessage(e, (int)(Math.random()*));
     }
     }
-    }	}
+    }
+    	
+	}
+    
+    
 	
+	private void sendMessage(MessageReceivedEvent e, int i) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	private void checkSlap(MessageReceivedEvent e) {
         if(e.getAuthor().isBot()) return;
         String slaps = getMention(e) + " slaps ";
@@ -184,7 +195,7 @@ public class App extends ListenerAdapter {
         return e.getMessage().getContentDisplay();
     }
 
-    public void sendMessage(MessageReceivedEvent e, String s) {
+	public void sendMessage(MessageReceivedEvent e, String s) {
         e.getChannel().sendMessage(s).queue();
     }
 }
