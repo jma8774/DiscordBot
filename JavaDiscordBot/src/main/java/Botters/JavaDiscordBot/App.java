@@ -58,12 +58,20 @@ public class App extends ListenerAdapter {
     	
     	if(!e.getAuthor().isBot()) { // if not a bot
     	for(int i = 0; i < greetings.size(); i ++) { // check for all possible greetings
-			if(e.getMessage().getContentDisplay().toLowerCase().indexOf(greetings.get(i).toLowerCase()) > -1) {
-				e.getChannel().sendMessage(greetings.get((int) (Math.random()*greetings.size())) + " " + e.getAuthor().getAsMention() + "!").queue();
+			if(getMessage(e).toLowerCase().indexOf(greetings.get(i).toLowerCase()) > -1) {
+				sendMessage(e, greetings.get((int) (Math.random()*greetings.size())) + " " + e.getAuthor().getAsMention() + "!");
 				break;
 			}
     				
     	}
     	}
+    }
+	
+	public String getMessage(MessageReceivedEvent e) {
+        return e.getMessage().getContentDisplay();
+    }
+
+    public void sendMessage(MessageReceivedEvent e, String s) {
+        e.getChannel().sendMessage(s).queue();
     }
 }
