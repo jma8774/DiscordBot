@@ -21,12 +21,12 @@ public class App extends ListenerAdapter {
     
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
-    	Message objMsg = e.getMessage();
-    	MessageChannel objChannel = e.getChannel();
-    	User objUser = e.getAuthor();
+    	Message msg = e.getMessage();
+    	MessageChannel c = e.getChannel();
+    	User u = e.getAuthor();
     	
-    	if(objMsg.getContentDisplay().equals("hello")) objChannel.sendMessage("Hello, " + objUser.getAsMention() + "!").queue();
-    	if(objMsg.getContentDisplay().indexOf("boom") > -1) objChannel.sendMessage(objUser.getAsMention() + " stfu, boom your mom.").queue();
+    	if(msg.getContentDisplay().equals("hello")) c.sendMessage("Hello, " + u.getAsMention() + "!").queue();
+    	if(msg.getContentDisplay().indexOf("boom") > -1) c.sendMessage(u.getAsMention() + " stfu, boom your mom.").queue();
     	
     		
     }
