@@ -23,12 +23,11 @@ public class App extends ListenerAdapter {
     
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
-    	Message msg = e.getMessage();
-    	MessageChannel c = e.getChannel();
-    	User u = e.getAuthor();
+//    	Message msg = e.getMessage();
+//    	MessageChannel c = e.getChannel();
+//    	User u = e.getAuthor();
     	
     	checkGreets(e);
-    	if(msg.getContentDisplay().indexOf("boom") > -1 && !u.isBot()) c.sendMessage(u.getAsMention() + " stfu, boom your mom.").queue();
     	
     }
     
@@ -40,6 +39,8 @@ public class App extends ListenerAdapter {
     	greetings.add("Ni Hao");
     	greetings.add("Hola");
     	greetings.add("Sup");
+    	greetings.add("Yo");
+    	
     	
     	if(!e.getAuthor().isBot()) { // if not a bot
     	for(int i = 0; i < greetings.size(); i ++) { // check for all possible greetings
