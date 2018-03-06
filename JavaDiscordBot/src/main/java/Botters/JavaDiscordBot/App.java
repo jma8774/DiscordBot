@@ -1,5 +1,6 @@
 package Botters.JavaDiscordBot;
 
+import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
@@ -47,21 +49,26 @@ public class App extends ListenerAdapter {
 
 
 
-	private void brianStuff(MessageReceivedEvent e) {
+	private void brianStuff(MessageReceivedEvent e)
+	{
 		// TODO Auto-generated method stub
-     if(!e.getAuthor().isBot())	{
+     if(!e.getAuthor().isBot())	
+     {
     	if(e.getMessage().getContentDisplay().equals("test")) {
     		e.getChannel().sendMessage("hello").queue();
     		}
     	
-    	if(e.getMessage().getContentDisplay().equals("test1")) {
+    if(e.getMessage().getContentDisplay().equals("test1")) {
     		e.getChannel().sendMessage("test2 " + e.getAuthor().getAsMention()).queue();
-    	}
+    		}
+    {
+    	java.util.List<Member> members = e.getMessage().getMentionedMembers();
+    
     if(getMessage(e).contains("slap @")) {
-    	sendMessage(e,"slap @" + e.getMessage().getId());
+    	sendMessage(e, getMention(e) + "slapped " + members.get(0).getAsMention());
     }
-     }
-    }	
+    }
+    }	}
 	
 	private void checkHelp(MessageReceivedEvent e) {
 		if(e.getAuthor().isBot()) return;
