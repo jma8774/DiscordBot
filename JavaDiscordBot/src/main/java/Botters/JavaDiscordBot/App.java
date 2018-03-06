@@ -1,5 +1,7 @@
 package Botters.JavaDiscordBot;
 
+import java.util.ArrayList;
+
 import javax.security.auth.login.LoginException;
 
 import net.dv8tion.jda.core.AccountType;
@@ -26,8 +28,24 @@ public class App extends ListenerAdapter {
     	User u = e.getAuthor();
     	
     	if(msg.getContentDisplay().equals("hello")) c.sendMessage("Hello, " + u.getAsMention() + "!").queue();
-    	if(msg.getContentDisplay().indexOf("boom") > -1) c.sendMessage(u.getAsMention() + " stfu, boom your mom.").queue();
+    	if(msg.getContentDisplay().indexOf("boom") > -1 && !u.isBot()) c.sendMessage(u.getAsMention() + " stfu, boom your mom.").queue();
     	
-    		
+    }
+    
+    public void checkGreets(MessageReceivedEvent e) {
+    	ArrayList<String> greetings = new ArrayList<String>();
+    	greetings.add("hello");
+    	greetings.add("konichiwa");
+    	greetings.add("howdy");
+    	
+    	if(!e.getAuthor().isBot()) { // if not a bot
+    	for(int i = 0; i < greetings.size(); i ++) { // check for all possible greetings
+			if(e.getMessage().getContentDisplay().equals(greetings.get(i))) {
+				e.getChannel().sendMessage(greetings.get(i) + e.getAuthor().getAsMention() + "!").queue();
+				break;
+			}
+    				
+    	}
+    	}
     }
 }
