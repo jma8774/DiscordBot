@@ -63,10 +63,10 @@ public class App extends ListenerAdapter {
     	}
     
     
-		String Rollss = getMessage(e).substring(7);
+		String Rollss = getMessage(e).substring(6);
 		int i = Integer.parseInt(Rollss);
-		if(getMessage(e).startsWith("!") && getMessage(e).indexOf("rolls") == 1) {
-			sendMessage(e, "You rolled a " + (int)(Math.random()*i));
+		if(getMessage(e).startsWith("!") && getMessage(e).indexOf("roll") == 1) {
+			sendMessage(e, "You rolled a " + (int)(Math.random()*i+1));
 		}
 	}
     
