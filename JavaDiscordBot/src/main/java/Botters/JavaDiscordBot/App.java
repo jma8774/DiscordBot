@@ -36,14 +36,14 @@ public class App extends ListenerAdapter {
 //    	MessageChannel c = e.getChannel();
 //    	User u = e.getAuthor();
     	brianStuff(e);
-    //	stop = false;
-   // 	checkCurses(e);
-    //	if(stop) return;
-   // 	checkSlap(e);
-    //	checkHelp(e);
-    //	checkRoll(e);
-    //	checkHardstuck(e);
-	//	checkGreets(e);
+//    	stop = false;
+//    	checkCurses(e);
+//    	if(stop) return;
+//    	checkSlap(e);
+//    	checkHelp(e);
+//    	checkRoll(e);
+//    	checkHardstuck(e);
+//		checkGreets(e);
     }
     
 
@@ -53,26 +53,21 @@ public class App extends ListenerAdapter {
 	private void brianStuff(MessageReceivedEvent e)
 	{
 		// TODO Auto-generated method stub
-     if(!e.getAuthor().isBot())	{
-    	if(e.getMessage().getContentDisplay().equals("test")) {
-    		e.getChannel().sendMessage("hello").queue();
-    		}
+		if(e.getAuthor().isBot()) return;
+		if(e.getMessage().getContentDisplay().equals("test")) {
+			e.getChannel().sendMessage("hello").queue();
+    	}
     	
-    if(e.getMessage().getContentDisplay().equals("test1")) {
+		if(e.getMessage().getContentDisplay().equals("test1")) {
     		e.getChannel().sendMessage("test2 " + e.getAuthor().getAsMention()).queue();
-    		}
-    {
+    	}
     
     
-    String Rollss = getMessage(e).substring(7);
-    int i = Integer.parseInt(Rollss);
-    if(getMessage(e).startsWith("!") && getMessage(e).indexOf("rolls") == 1) {
-    	System.out.println(i);
-    	sendMessage(e, (int)(Math.random()*));
-    }
-    }
-    }
-    	
+		String Rollss = getMessage(e).substring(7);
+		int i = Integer.parseInt(Rollss);
+		if(getMessage(e).startsWith("!") && getMessage(e).indexOf("rolls") == 1) {
+			sendMessage(e, "You rolled a " + (int)(Math.random()*i));
+		}
 	}
     
     
