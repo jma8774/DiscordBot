@@ -1,6 +1,10 @@
 package Botters.JavaDiscordBot;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.security.auth.login.LoginException;
 
@@ -18,7 +22,7 @@ public class App extends ListenerAdapter {
     public static void main( String[] args ) throws LoginException, IllegalArgumentException, InterruptedException, RateLimitedException {
     	JDA bot = new JDABuilder(AccountType.BOT).setToken("NDIwMzk1OTM4MjcyNjQxMDM0.DX-KZA.li9zGD_02OWPZonDNt9mnq11nSU").buildBlocking();
     	bot.addEventListener(new App());
-    	
+    	begForDonations(1800000, bot); // 30 minutes
     }
     
     @Override
@@ -29,10 +33,10 @@ public class App extends ListenerAdapter {
 //    	brianStuff(e);
     	checkCurses(e);
 		checkGreets(e);
-    	
     }
     
-    private void brianStuff(MessageReceivedEvent e) {
+
+	private void brianStuff(MessageReceivedEvent e) {
 		// TODO Auto-generated method stub
      if(!e.getAuthor().isBot())	{
     	if(e.getMessage().getContentDisplay().equals("test")) {
@@ -47,6 +51,17 @@ public class App extends ListenerAdapter {
     			
     }	
 	
+	private static void begForDonations(int ms, final JDA bot) {
+		Timer t = new Timer();
+		t.schedule(new TimerTask() {
+
+		            @Override
+		            public void run() {
+		            	bot.getTextChannelById("152954629993398272").sendMessage("If you like this bot, please consider donating RP to the creators, " 
+		            	+ bot.getUserById("152957206025863168").getAsMention() + " and " + bot.getUserById("152954180984635392").getAsMention() + ".").queue();
+		            }
+		        }, 100, ms); // ms = milleseconds until the next message, can alter this in the main function
+	}
 
     public void checkCurses(MessageReceivedEvent e) {
     	String[] swears = {"arse", "ass", "asshole", "bastard", "bitch", "crap", "cunt", "fuck", "nigga","nigger","shit","son of a bitch","faggot"};
