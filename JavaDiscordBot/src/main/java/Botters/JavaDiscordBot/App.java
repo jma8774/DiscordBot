@@ -33,7 +33,7 @@ public class App extends ListenerAdapter {
 //    	Message msg = e.getMessage();
 //    	MessageChannel c = e.getChannel();
 //    	User u = e.getAuthor();
-//    	brianStuff(e);
+    	brianStuff(e);
     	stop = false;
     	checkCurses(e);
     	if(stop) return;
@@ -57,7 +57,9 @@ public class App extends ListenerAdapter {
     	if(e.getMessage().getContentDisplay().equals("test1")) {
     		e.getChannel().sendMessage("test2 " + e.getAuthor().getAsMention()).queue();
     	}
-    	
+    if(getMessage(e).contains("slap @")) {
+    	sendMessage(e,"slap @" + e.getMessage().getId());
+    }
      }
     }	
 	
