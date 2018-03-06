@@ -22,7 +22,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 public class App extends ListenerAdapter {
 	private boolean stop;
-	private final String KAPPA = "382387471423504384";
+	private final String KAPPA = "420687983365193729";
 	static JDA bot;
     public static void main( String[] args ) throws LoginException, IllegalArgumentException, InterruptedException, RateLimitedException {
     	bot = new JDABuilder(AccountType.BOT).setToken("").buildBlocking();
@@ -105,7 +105,7 @@ public class App extends ListenerAdapter {
 	private void checkHardstuck(MessageReceivedEvent e) {
 		if(e.getAuthor().isBot()) return;
 		if(e.getMessage().getContentDisplay().startsWith("`") && e.getMessage().getContentDisplay().indexOf("hardstuck") == 1) {
-			sendMessage(e, bot.getUserById("152954300933472256").getAsMention() + " is hardstuck " + bot.getEmoteById(KAPPA).getAsMention());
+			sendMessage(e, bot.getUserById("193888610657894400").getAsMention() + " is hardstuck " + bot.getEmoteById(KAPPA).getAsMention());
 		}
 	}
 	
