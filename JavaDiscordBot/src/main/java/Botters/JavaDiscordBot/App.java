@@ -27,21 +27,25 @@ public class App extends ListenerAdapter {
 //    	MessageChannel c = e.getChannel();
 //    	User u = e.getAuthor();
     	brianStuff(e);
-    	checkGreets(e);
+//		checkGreets(e);
     	
     }
     
     private void brianStuff(MessageReceivedEvent e) {
 		// TODO Auto-generated method stub
-		
+     if(!e.getAuthor().isBot())	{
     	if(e.getMessage().getContentDisplay().equals("test")) {
     		e.getChannel().sendMessage("hello").queue();
-    	if(e.getMessage().getContentDisplay().equals("test1"))
-    		e.getChannel().sendMessage(e.getauthor() + "test2").queue();
+    		}
+    	
+    	if(e.getMessage().getContentDisplay().equals("test1")) {
+    		e.getChannel().sendMessage("test2 " + e.getAuthor().getAsMention()).queue();
     	}
+    	
+    }
     			
-    	}
-	}
+    }	
+	
 
 	public void checkGreets(MessageReceivedEvent e) {
     	ArrayList<String> greetings = new ArrayList<String>();
