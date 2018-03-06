@@ -34,6 +34,7 @@ public class App extends ListenerAdapter {
     public void checkGreets(MessageReceivedEvent e) {
     	ArrayList<String> greetings = new ArrayList<String>();
     	greetings.add("Hello");
+    	greetings.add("Greeting");
     	greetings.add("Konichiwa");
     	greetings.add("Howdy");
     	greetings.add("Ni Hao");
