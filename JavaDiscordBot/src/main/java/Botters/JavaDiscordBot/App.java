@@ -34,6 +34,13 @@ public class App extends ListenerAdapter {
     private void brianStuff(MessageReceivedEvent e) {
 		// TODO Auto-generated method stub
 		
+    	if(e.getMessage().getContentDisplay().equals("test")) {
+    		e.getChannel().sendMessage("hello").queue();
+    	if(e.getMessage().getContentDisplay().equals("test1"))
+    		e.getChannel().sendMessage(e.getauthor() + "test2").queue();
+    	}
+    			
+    	}
 	}
 
 	public void checkGreets(MessageReceivedEvent e) {
