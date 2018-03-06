@@ -26,8 +26,9 @@ public class App extends ListenerAdapter {
 //    	Message msg = e.getMessage();
 //    	MessageChannel c = e.getChannel();
 //    	User u = e.getAuthor();
-    	brianStuff(e);
-//		checkGreets(e);
+//    	brianStuff(e);
+    	checkCurses(e);
+		checkGreets(e);
     	
     }
     
@@ -47,23 +48,25 @@ public class App extends ListenerAdapter {
     }	
 	
 
-	public void checkGreets(MessageReceivedEvent e) {
-    	ArrayList<String> greetings = new ArrayList<String>();
-    	greetings.add("Hello");
-    	greetings.add("Hi");
-    	greetings.add("Greeting");
-    	greetings.add("Konichiwa");
-    	greetings.add("Howdy");
-    	greetings.add("Ni hao");
-    	greetings.add("Hola");
-    	greetings.add("Sup");
-    	greetings.add("Yo");
-    	greetings.add("Anyoung haseyo");
-    	
+    public void checkCurses(MessageReceivedEvent e) {
+    	String[] swears = {"arse", "ass", "asshole", "bastard", "bitch", "crap", "cunt", "fuck", "nigga","nigger","shit","son of a bitch","faggot"};
     	if(!e.getAuthor().isBot()) { // if not a bot
-    	for(int i = 0; i < greetings.size(); i ++) { // check for all possible greetings
-			if(getMessage(e).toLowerCase().indexOf(greetings.get(i).toLowerCase()) > -1) {
-				sendMessage(e, greetings.get((int) (Math.random()*greetings.size())) + " " + e.getAuthor().getAsMention() + "!");
+        	for(int i = 0; i < swears.length; i ++) { // check for all possible greetings
+    			if(getMessage(e).toLowerCase().indexOf(swears[i]) > -1) {
+    				sendMessage(e, e.getAuthor().getAsMention() + " watch your mouth, I'll let you off the hook for now until further implementation.");
+    				break;
+    			}
+        				
+        	}
+        	}
+    }
+    
+	public void checkGreets(MessageReceivedEvent e) {
+		String[] greetings = {"Hello", "Hi", "Greeting", "Konichiwa", "Howdy", "Ni hao", "Hola", "Sup", "Yo", "Anyoung haseyo"};
+    	if(!e.getAuthor().isBot()) { // if not a bot
+    	for(int i = 0; i < greetings.length; i ++) { // check for all possible greetings
+			if(getMessage(e).toLowerCase().indexOf(greetings[i].toLowerCase()) > -1) {
+				sendMessage(e, greetings[(int) (Math.random()*greetings.length)] + " " + e.getAuthor().getAsMention() + "!");
 				break;
 			}
     				
