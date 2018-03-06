@@ -34,16 +34,17 @@ public class App extends ListenerAdapter {
     
     public void checkGreets(MessageReceivedEvent e) {
     	ArrayList<String> greetings = new ArrayList<String>();
-    	greetings.add("hello");
-    	greetings.add("konichiwa");
-    	greetings.add("howdy");
-    	greetings.add("ni hao");
-    	greetings.add("hola");
+    	greetings.add("Hello");
+    	greetings.add("Konichiwa");
+    	greetings.add("Howdy");
+    	greetings.add("Ni Hao");
+    	greetings.add("Hola");
+    	greetings.add("Sup");
     	
     	if(!e.getAuthor().isBot()) { // if not a bot
     	for(int i = 0; i < greetings.size(); i ++) { // check for all possible greetings
-			if(e.getMessage().getContentDisplay().toLowerCase().indexOf(greetings.get(i)) > -1) {
-				e.getChannel().sendMessage(greetings.get(i) + " " + e.getAuthor().getAsMention() + "!").queue();
+			if(e.getMessage().getContentDisplay().toLowerCase().indexOf(greetings.get(i).toLowerCase()) > -1) {
+				e.getChannel().sendMessage(greetings.get((int) (Math.random()*greetings.size())) + " " + e.getAuthor().getAsMention() + "!").queue();
 				break;
 			}
     				
