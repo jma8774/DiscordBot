@@ -153,7 +153,7 @@ public class App extends ListenerAdapter {
 	}
 
     public void checkCurses(MessageReceivedEvent e) {
-    	String[] swears = {"arse", "ass", "asshole", "bastard", "bitch", "crap", "cunt", "fuck", "nigga","nigger","shit","son of a bitch","faggot"};
+    	String[] swears = {"ass ", "asshole", "bastard", "bitch", "crap", "cunt", "fuck", "nigga","nigger","shit","son of a bitch","faggot"};
     	if(e.getAuthor().isBot()) return;
     	for(int i = 0; i < swears.length; i ++) { // check for all possible greetings
 			if(getMessage(e).toLowerCase().indexOf(swears[i]) > -1) {
