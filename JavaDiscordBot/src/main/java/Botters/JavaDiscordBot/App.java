@@ -26,22 +26,28 @@ public class App extends ListenerAdapter {
 //    	Message msg = e.getMessage();
 //    	MessageChannel c = e.getChannel();
 //    	User u = e.getAuthor();
-    	
+    	brianStuff(e);
     	checkGreets(e);
     	
     }
     
-    public void checkGreets(MessageReceivedEvent e) {
+    private void brianStuff(MessageReceivedEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void checkGreets(MessageReceivedEvent e) {
     	ArrayList<String> greetings = new ArrayList<String>();
     	greetings.add("Hello");
+    	greetings.add("Hi");
     	greetings.add("Greeting");
     	greetings.add("Konichiwa");
     	greetings.add("Howdy");
-    	greetings.add("Ni Hao");
+    	greetings.add("Ni hao");
     	greetings.add("Hola");
     	greetings.add("Sup");
     	greetings.add("Yo");
-    	
+    	greetings.add("Anyoung haseyo");
     	
     	if(!e.getAuthor().isBot()) { // if not a bot
     	for(int i = 0; i < greetings.size(); i ++) { // check for all possible greetings
