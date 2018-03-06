@@ -35,7 +35,7 @@ public class App extends ListenerAdapter {
 //    	Message msg = e.getMessage();
 //    	MessageChannel c = e.getChannel();
 //    	User u = e.getAuthor();
-    	brianStuff(e);
+//    	brianStuff(e);
     	stop = false;
     	checkCurses(e);
     	if(stop) return;
@@ -74,14 +74,17 @@ public class App extends ListenerAdapter {
 	private void checkSlap(MessageReceivedEvent e) {
         if(e.getAuthor().isBot()) return;
         String slaps = getMention(e) + " slaps ";
+        String[] itemList = {" with a fish.", " with their dick.", " with a stick.", " with their ass.", " with RP.", " all the way back to China.", " with a splash of water.",
+        		" with a deck of cards."};
         List<Member> members = e.getMessage().getMentionedMembers();
         if(e.getMessage().getContentDisplay().startsWith("`") && e.getMessage().getContentDisplay().indexOf("slap") == 1) {
+        	if(members.size() == 1) {
+                slaps += members.get(0).getAsMention() + itemList[(int)(Math.random()*itemList.length)];
+                sendMessage(e, slaps);
+                return;
+        	}
             for(int i = 0; i < members.size(); i ++) {
-                if(members.size() == 1) {
-                    slaps += members.get(i).getAsMention() + ".";
-                } else {
-                    slaps += i == members.size()-1 ? " and " + members.get(i).getAsMention() + ". " : members.get(i).getAsMention() + ", ";
-                }
+                    slaps += i == members.size()-1 ? " and " + members.get(i).getAsMention() + itemList[(int)(Math.random()*itemList.length)] : members.get(i).getAsMention() + ", ";
             }
             sendMessage(e, slaps);
         }
