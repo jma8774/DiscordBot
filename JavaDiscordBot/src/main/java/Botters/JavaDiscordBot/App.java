@@ -19,10 +19,12 @@ import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 public class App extends ListenerAdapter {
+	private boolean stop;
+	static JDA bot;
     public static void main( String[] args ) throws LoginException, IllegalArgumentException, InterruptedException, RateLimitedException {
-    	JDA bot = new JDABuilder(AccountType.BOT).setToken("NDIwMzk1OTM4MjcyNjQxMDM0.DX-KZA.li9zGD_02OWPZonDNt9mnq11nSU").buildBlocking();
+    	bot = new JDABuilder(AccountType.BOT).setToken("NDIwMzk1OTM4MjcyNjQxMDM0.DX-KZA.li9zGD_02OWPZonDNt9mnq11nSU").buildBlocking();
     	bot.addEventListener(new App());
-    	begForDonations(1800000, bot); // 30 minutes
+//    	begForDonations(1800000, bot); // 30 minutes
     }
     
     @Override
@@ -31,10 +33,18 @@ public class App extends ListenerAdapter {
 //    	MessageChannel c = e.getChannel();
 //    	User u = e.getAuthor();
 //    	brianStuff(e);
+    	stop = false;
     	checkCurses(e);
+    	if(stop) return;
+    	checkHelp(e);
+    	checkRoll(e);
+    	checkHardstuck(e);
 		checkGreets(e);
     }
     
+
+
+
 
 	private void brianStuff(MessageReceivedEvent e) {
 		// TODO Auto-generated method stub
@@ -47,9 +57,57 @@ public class App extends ListenerAdapter {
     		e.getChannel().sendMessage("test2 " + e.getAuthor().getAsMention()).queue();
     	}
     	
-    }
-    			
+     }
     }	
+	
+	private void checkHelp(MessageReceivedEvent e) {
+		if(e.getAuthor().isBot()) return;
+		if(e.getMessage().getContentDisplay().startsWith("`") && e.getMessage().getContentDisplay().indexOf("help") == 1) {
+			sendMessage(e, getMention(e) + "``` " + "Here is a list of my commands:\n" +
+					"`help - prompts for this window \n" + 
+					"`roll - rolls a 6 sided dice \n" +
+					"`hardstuck - someone who is hardstuck in league \n" +
+					"```");
+		}
+	}
+	
+	private void checkHardstuck(MessageReceivedEvent e) {
+		if(e.getAuthor().isBot()) return;
+		if(e.getMessage().getContentDisplay().startsWith("`") && e.getMessage().getContentDisplay().indexOf("hardstuck") == 1) {
+			sendMessage(e, bot.getUserById("152954300933472256").getAsMention() + " is hardstuck :Kappa:");
+		}
+	}
+	
+	
+	private void checkRoll(MessageReceivedEvent e) {
+		if(e.getAuthor().isBot()) return;
+		if(e.getMessage().getContentDisplay().startsWith("`") && e.getMessage().getContentDisplay().indexOf("roll") == 1) {
+			int roll = (int)(Math.random()*6+1);
+			switch(roll) {
+				case 0: 
+					sendMessage(e, getMention(e) + " rolled a :zero:");
+					break;
+				case 1:
+					sendMessage(e, getMention(e) + " rolled a :one:");
+					break;
+				case 2:
+					sendMessage(e, getMention(e) + " rolled a :two:");
+					break;
+				case 3:
+					sendMessage(e, getMention(e) + " rolled a :three:");
+					break;
+				case 4:
+					sendMessage(e, getMention(e) + " rolled a :four:");
+					break;
+				case 5:
+					sendMessage(e, getMention(e) + " rolled a :five:");
+					break;
+				case 6:
+					sendMessage(e, getMention(e) + " rolled a :six:");
+					break;
+			}
+		}
+	}
 	
 	private static void begForDonations(int ms, final JDA bot) {
 		Timer t = new Timer();
@@ -65,30 +123,32 @@ public class App extends ListenerAdapter {
 
     public void checkCurses(MessageReceivedEvent e) {
     	String[] swears = {"arse", "ass", "asshole", "bastard", "bitch", "crap", "cunt", "fuck", "nigga","nigger","shit","son of a bitch","faggot"};
-    	if(!e.getAuthor().isBot()) { // if not a bot
-        	for(int i = 0; i < swears.length; i ++) { // check for all possible greetings
-    			if(getMessage(e).toLowerCase().indexOf(swears[i]) > -1) {
-    				sendMessage(e, e.getAuthor().getAsMention() + " watch your mouth, I'll let you off the hook for now until further implementation.");
-    				break;
-    			}
-        				
-        	}
-        	}
-    }
-    
-	public void checkGreets(MessageReceivedEvent e) {
-		String[] greetings = {"Hello", "Hi", "Greeting", "Konichiwa", "Howdy", "Ni hao", "Hola", "Sup", "Yo", "Anyoung haseyo"};
-    	if(!e.getAuthor().isBot()) { // if not a bot
-    	for(int i = 0; i < greetings.length; i ++) { // check for all possible greetings
-			if(getMessage(e).toLowerCase().indexOf(greetings[i].toLowerCase()) > -1) {
-				sendMessage(e, greetings[(int) (Math.random()*greetings.length)] + " " + e.getAuthor().getAsMention() + "!");
+    	if(e.getAuthor().isBot()) return;
+    	for(int i = 0; i < swears.length; i ++) { // check for all possible greetings
+			if(getMessage(e).toLowerCase().indexOf(swears[i]) > -1) {
+				sendMessage(e, getMention(e) + ", watch your mouth!");
+				stop = true;
 				break;
 			}
     				
     	}
+    }
+    
+	public void checkGreets(MessageReceivedEvent e) {
+		String[] greetings = {"Hello ", "Hi ", "Greeting ", "Konichiwa ", "Howdy ", "Ni hao ", "Hola ", "Sup ", "Yo ", "Anyoung haseyo "};
+    	if(e.getAuthor().isBot()) return;
+    	for(int i = 0; i < greetings.length; i ++) { // check for all possible greetings
+			if(getMessage(e).toLowerCase().indexOf(greetings[i].toLowerCase()) == 0) {
+				sendMessage(e, greetings[(int) (Math.random()*greetings.length)] + " " + getMention(e) + "!");
+				break;
+			}
+    				
     	}
     }
 	
+	public String getMention(MessageReceivedEvent e) {
+		return e.getAuthor().getAsMention();
+	}
 	public String getMessage(MessageReceivedEvent e) {
         return e.getMessage().getContentDisplay();
     }
