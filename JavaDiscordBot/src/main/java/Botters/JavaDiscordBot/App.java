@@ -25,7 +25,7 @@ public class App extends ListenerAdapter {
 	private final String KAPPA = "382387471423504384";
 	static JDA bot;
     public static void main( String[] args ) throws LoginException, IllegalArgumentException, InterruptedException, RateLimitedException {
-    	bot = new JDABuilder(AccountType.BOT).setToken("NDIwMzk1OTM4MjcyNjQxMDM0.DX-KZA.li9zGD_02OWPZonDNt9mnq11nSU").buildBlocking();
+    	bot = new JDABuilder(AccountType.BOT).setToken("").buildBlocking();
     	bot.addEventListener(new App());
 //    	begForDonations(1800000, bot); // 30 minutes
     }
