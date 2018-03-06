@@ -97,7 +97,7 @@ public class App extends ListenerAdapter {
 					"`help - prompts for this window \n" + 
 					"`roll - rolls a 6 sided dice \n" +
 					"`hardstuck - someone who is hardstuck in league \n" +
-					"`slap @user @user1 - slap someone \n" +
+					"`slap @user @user1 - slap someone with something \n" +
 					"```");
 		}
 	}
