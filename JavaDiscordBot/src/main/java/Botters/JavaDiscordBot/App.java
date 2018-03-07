@@ -17,38 +17,51 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 public class App extends ListenerAdapter {
+	
 	private boolean stop;
+	private static boolean tic;
 	private final String KAPPA = "420687983365193729";
-	static JDA bot;
+	private static JDA bot;
+	private String[][] ttt;
+	private static int ticTurn;
+	private static Message ticMsg;
+	
     public static void main( String[] args ) throws LoginException, IllegalArgumentException, InterruptedException, RateLimitedException {
-    	bot = new JDABuilder(AccountType.BOT).setToken("").buildBlocking();
+    	bot = new JDABuilder(AccountType.BOT).setToken("NDIwMzk1OTM4MjcyNjQxMDM0.DYCPEA.WsIIirT0B4WoN0_SFJT9vOa7uJU").buildBlocking();
     	bot.addEventListener(new App());
 //    	begForDonations(1800000, bot); // 30 minutes
+    	tic = false;
+    	ticTurn = 1;
     }
     
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
-//    	Message msg = e.getMessage();
-//    	MessageChannel c = e.getChannel();
-//    	User u = e.getAuthor();
-    	brianStuff(e);
-//    	stop = false;
-//    	checkCurses(e);
-//    	if(stop) return;
-//    	checkSlap(e);
-//    	checkHelp(e);
-//    	checkRoll(e);
-//    	checkHardstuck(e);
-//		checkGreets(e);
+//    	brianStuff(e);
+    	stop = false;
+    	checkCurses(e);
+    	if(stop) return;
+    	checkSlap(e);
+    	checkHelp(e);
+    	checkRoll(e);
+    	checkHardstuck(e);
+		checkGreets(e);
+		checkTicTacToe(e);
+//		randomReaction(e);
     }
     
+    @Override
+    public void onMessageReactionAdd(MessageReactionAddEvent e) {
+    	
+    }
 
-
-
+	private void randomReaction(MessageReceivedEvent e) {
+		e.getMessage().addReaction(e.getGuild().getEmoteById(KAPPA)).queue();
+	}
 
 	private void brianStuff(MessageReceivedEvent e)
 	{
@@ -69,14 +82,66 @@ public class App extends ListenerAdapter {
 			sendMessage(e, "You rolled a " + (int)(Math.random()*i+1));
 		}
 	}
-    
-    
-	
-	private void sendMessage(MessageReceivedEvent e, int i) {
-		// TODO Auto-generated method stub
-		
-	}
 
+	private void checkTicTacToe(MessageReceivedEvent e) {
+		if(e.getMessage().getContentDisplay().startsWith(":")) ticMsg = e.getMessage(); // refrence to previous message so we can delete it
+		if(e.getAuthor().isBot()) return;
+		if(!e.getMessage().getContentDisplay().startsWith("`") && !(e.getMessage().getContentDisplay().indexOf("tic") == 1)) return;
+		String s = "";
+		if(!tic) { // create a new game is tic is false
+			ttt = new String[3][3];
+			for(int row = 0; row < ttt.length; row ++) {
+				for(int col = 0; col < ttt[0].length; col ++) {
+					ttt[row][col] = ":white_square_button:";
+					s += ttt[row][col];
+				}
+				s += "\n";
+			}
+			tic = true;
+		} else { // proceed if there is already a game
+			ticMsg.delete().queue();
+			if(e.getMessage().getContentDisplay().equals("`tic end")) { // statement for if they want to end the games
+				sendMessage(e, "This game of tic-tac-toe has ended.");
+				tic = false;
+				ticTurn = 1;
+				return;
+			}
+			if(e.getMessage().getContentDisplay().length() < 6) return;
+			int pick = Integer.parseInt(e.getMessage().getContentDisplay().substring(5, 6)) - 1;
+			if(pick < 0 || pick > 8) return;
+			int r = pick/3;
+			int c = pick%3;
+			switch(ticTurn) {
+				case 1: // x's turn
+					if(ttt[r][c] == ":white_square_button:") {
+						ttt[r][c] = ":heavy_multiplication_x:";
+						ticTurn = 2;
+					}
+				case 2: // o's turn
+					if(ttt[r][c] == ":white_square_button:") {
+						ttt[r][c] = ":white_circle:";
+						ticTurn = 1;
+					}
+			}
+			for(int row = 0; row < ttt.length; row ++) {
+				for(int col = 0; col < ttt[0].length; col ++) {
+					s += ttt[row][col];
+				}
+				s += "\n";
+			}
+		}
+		sendMessage(e, s);
+		if(checkWin() != null) {
+			sendMessage(e, checkWin());
+			tic = false;
+			ticTurn = 1;
+		}
+	}
+	
+	private String checkWin() {
+		return null;
+	}
+	
 	private void checkSlap(MessageReceivedEvent e) {
         if(e.getAuthor().isBot()) return;
         String slaps = getMention(e) + " slaps ";
@@ -111,7 +176,7 @@ public class App extends ListenerAdapter {
 	private void checkHardstuck(MessageReceivedEvent e) {
 		if(e.getAuthor().isBot()) return;
 		if(e.getMessage().getContentDisplay().startsWith("`") && e.getMessage().getContentDisplay().indexOf("hardstuck") == 1) {
-			sendMessage(e, bot.getUserById("193888610657894400").getAsMention() + " is hardstuck " + bot.getEmoteById(KAPPA).getAsMention());
+			sendMessage(e, bot.getUserById("152954300933472256").getAsMention() + " is hardstuck " + bot.getEmoteById(KAPPA).getAsMention());
 		}
 	}
 	
@@ -159,7 +224,7 @@ public class App extends ListenerAdapter {
 	}
 
     public void checkCurses(MessageReceivedEvent e) {
-    	String[] swears = {"ass ", "asshole", "bastard", "bitch", "crap", "cunt", "fuck", "nigga","nigger","shit","son of a bitch","faggot"};
+    	String[] swears = {"asshole", "bastard", "bitch", "crap", "cunt", "fuck", "nigga","nigger","shit","son of a bitch","faggot"};
     	if(e.getAuthor().isBot()) return;
     	for(int i = 0; i < swears.length; i ++) { // check for all possible greetings
 			if(getMessage(e).toLowerCase().indexOf(swears[i]) > -1) {
@@ -193,4 +258,5 @@ public class App extends ListenerAdapter {
 	public void sendMessage(MessageReceivedEvent e, String s) {
         e.getChannel().sendMessage(s).queue();
     }
+	
 }
