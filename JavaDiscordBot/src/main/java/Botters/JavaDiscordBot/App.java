@@ -32,7 +32,7 @@ public class App extends ListenerAdapter {
 	private static Message ticMsg;
 	
     public static void main( String[] args ) throws LoginException, IllegalArgumentException, InterruptedException, RateLimitedException {
-    	bot = new JDABuilder(AccountType.BOT).setToken("NDIwMzk1OTM4MjcyNjQxMDM0.DYCPEA.WsIIirT0B4WoN0_SFJT9vOa7uJU").buildBlocking();
+    	bot = new JDABuilder(AccountType.BOT).setToken("").buildBlocking();
     	bot.addEventListener(new App());
 //    	begForDonations(1800000, bot); // 30 minutes
     	tic = false;
@@ -84,26 +84,26 @@ public class App extends ListenerAdapter {
 	}
 
 	private void checkTicTacToe(MessageReceivedEvent e) {
-		if(e.getMessage().getContentDisplay().startsWith(":")) ticMsg = e.getMessage(); // refrence to previous message so we can delete it
+		if(e.getMessage().getContentDisplay().startsWith(":")) ticMsg = e.getMessage(); // reference to previous message so we can delete it
 		if(e.getAuthor().isBot()) return;
 		if(!e.getMessage().getContentDisplay().startsWith("`") && !(e.getMessage().getContentDisplay().indexOf("tic") == 1)) return;
 		String s = "";
 		if(!tic) { // create a new game is tic is false
 			ttt = new String[3][3];
-			for(int row = 0; row < ttt.length; row ++) {
+			for(int row = 0; row < ttt.length; row ++) { // loop to create new board game
 				for(int col = 0; col < ttt[0].length; col ++) {
 					ttt[row][col] = ":white_square_button:";
 					s += ttt[row][col];
 				}
 				s += "\n";
 			}
-			tic = true;
+			tic = true; // tic is to make sure that there is only one tic-tac-toe running at once
 		} else { // proceed if there is already a game
-			ticMsg.delete().queue();
+			ticMsg.delete().queue(); // delete the previous tic-tac-toe board
 			if(e.getMessage().getContentDisplay().equals("`tic end")) { // statement for if they want to end the games
 				sendMessage(e, "This game of tic-tac-toe has ended.");
-				tic = false;
-				ticTurn = 1;
+				tic = false; // turn to false to say that there is no tic-tac-tie running
+				ticTurn = 1; // set turn back to starting with x
 				return;
 			}
 			if(e.getMessage().getContentDisplay().length() < 6) return;
@@ -130,6 +130,7 @@ public class App extends ListenerAdapter {
 				s += "\n";
 			}
 		}
+		e.getMessage().delete().queue(); // delete the user's message
 		sendMessage(e, s); // send the message 
 		if(checkWin() != null) { // send another message if someone wins/tie
 			sendMessage(e, checkWin());
