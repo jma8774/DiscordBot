@@ -92,7 +92,7 @@ public class App extends ListenerAdapter {
 			ttt = new String[3][3];
 			for(int row = 0; row < ttt.length; row ++) { // loop to create new board game
 				for(int col = 0; col < ttt[0].length; col ++) {
-					ttt[row][col] = ":white_square_button:";
+					ttt[row][col] = ":white_medium_small_square:";
 					s += ttt[row][col];
 				}
 				s += "\n";
@@ -113,12 +113,12 @@ public class App extends ListenerAdapter {
 			int c = pick%3;
 			switch(ticTurn) {
 				case 1: // x's turn
-					if(ttt[r][c] == ":white_large_square: ") {
+					if(ttt[r][c] == ":white_medium_small_square:") {
 						ttt[r][c] = ":heavy_multiplication_x:";
 						ticTurn = 2;
 					}
 				case 2: // o's turn
-					if(ttt[r][c] == ":white_large_square:") {
+					if(ttt[r][c] == ":white_medium_small_square:") {
 						ttt[r][c] = ":white_circle:";
 						ticTurn = 1;
 					}
