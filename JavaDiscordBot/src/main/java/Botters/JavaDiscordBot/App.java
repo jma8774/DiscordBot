@@ -9,6 +9,8 @@ import java.util.TimerTask;
 
 import javax.security.auth.login.LoginException;
 
+import com.fasterxml.jackson.databind.deser.ValueInstantiator.Gettable;
+
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
@@ -16,10 +18,12 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
+
 
 public class App extends ListenerAdapter {
 	
@@ -41,7 +45,7 @@ public class App extends ListenerAdapter {
     
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
-    	brianStuff(e);
+ //		brianStuff(e);
     	stop = false;
     	checkCurses(e);
     	if(stop) return;
@@ -50,11 +54,22 @@ public class App extends ListenerAdapter {
     	checkRoll(e);
     	checkHardstuck(e);
 		checkGreets(e);
-//		checkTicTacToe(e);
+		briantic(e);
+		checkTicTacToe(e);
 //		randomReaction(e);
     }
     
-    @Override
+    private void briantic(MessageReceivedEvent e) {
+    	if(e.getAuthor().isBot())return;
+    	String[] hand = {"rock","scissors", "paper"};
+    	String hands = "I choose ";
+    	String selfhand = "You chose ";
+    	if(getMessage(e).startsWith("!") && getMessage(e).indexOf("rps") == 1){
+    		hands +=  hand[(int)(Math.random()*hand.length)];
+    		sendMessage(e, selfhand + getMessage(e).substring(5) + " and " + hands);	 
+    	}
+    }
+	@Override
     public void onMessageReactionAdd(MessageReactionAddEvent e) {
     	
     }
@@ -74,24 +89,14 @@ public class App extends ListenerAdapter {
 		if(e.getMessage().getContentDisplay().equals("test1")) {
     		e.getChannel().sendMessage("test2 " + e.getAuthor().getAsMention()).queue();
     	}
-		if(e.getMessage().getContentDisplay().startsWith("!") && getMessage(e).indexOf("tic") == 1) {
-		String SSS = "";
-		ttt = new String[3][3];
-			for(int row = 0; row < ttt.length; row ++) { // loop to create new board game
-				for(int col = 0; col < ttt[0].length; col ++) {
-					ttt[row][col] = ":white_medium_small_square:";
-					sendMessage(e, SSS += ttt[row][col]);
-				
-    		}
-    
 		String Rollss = getMessage(e).substring(6);
 		int i = Integer.parseInt(Rollss);
 		if(getMessage(e).startsWith("!") && getMessage(e).indexOf("roll") == 1) {
 			sendMessage(e, "You rolled a " + (int)(Math.random()*i+1));
 		}
-			}
-			}
-		}
+	}
+			
+		
 		
 	
 
