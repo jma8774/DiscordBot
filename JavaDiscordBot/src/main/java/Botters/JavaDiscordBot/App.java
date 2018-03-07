@@ -24,10 +24,10 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 public class App extends ListenerAdapter {
 	
 	private boolean stop;
-	private static boolean tic;
 	private final String KAPPA = "420687983365193729";
 	private static JDA bot;
 	private String[][] ttt;
+	private static boolean tic;
 	private static int ticTurn;
 	private static Message ticMsg;
 	
@@ -99,7 +99,7 @@ public class App extends ListenerAdapter {
 			}
 			tic = true; // tic is to make sure that there is only one tic-tac-toe running at once
 		} else { // proceed if there is already a game
-			ticMsg.delete().queue(); // delete the previous tic-tac-toe board
+			ticMsg.delete().queue(); // delete the previous tic-tac-toe board message
 			if(e.getMessage().getContentDisplay().equals("`tic end")) { // statement for if they want to end the games
 				sendMessage(e, "This game of tic-tac-toe has ended.");
 				tic = false; // turn to false to say that there is no tic-tac-tie running
