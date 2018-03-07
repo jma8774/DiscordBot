@@ -41,7 +41,7 @@ public class App extends ListenerAdapter {
     
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
-//    	brianStuff(e);
+    	brianStuff(e);
     	stop = false;
     	checkCurses(e);
     	if(stop) return;
@@ -50,7 +50,7 @@ public class App extends ListenerAdapter {
     	checkRoll(e);
     	checkHardstuck(e);
 		checkGreets(e);
-		checkTicTacToe(e);
+//		checkTicTacToe(e);
 //		randomReaction(e);
     }
     
@@ -66,7 +66,7 @@ public class App extends ListenerAdapter {
 	private void brianStuff(MessageReceivedEvent e)
 	{
 		// TODO Auto-generated method stub
-		if(e.getAuthor().isBot()) return;
+		if(e.getAuthor().isBot());
 		if(e.getMessage().getContentDisplay().equals("test")) {
 			e.getChannel().sendMessage("hello").queue();
     	}
@@ -74,14 +74,26 @@ public class App extends ListenerAdapter {
 		if(e.getMessage().getContentDisplay().equals("test1")) {
     		e.getChannel().sendMessage("test2 " + e.getAuthor().getAsMention()).queue();
     	}
-    
+		if(e.getMessage().getContentDisplay().startsWith("!") && getMessage(e).indexOf("tic") == 1) {
+		String SSS = "";
+		ttt = new String[3][3];
+			for(int row = 0; row < ttt.length; row ++) { // loop to create new board game
+				for(int col = 0; col < ttt[0].length; col ++) {
+					ttt[row][col] = ":white_medium_small_square:";
+					sendMessage(e, SSS += ttt[row][col]);
+				
+    		}
     
 		String Rollss = getMessage(e).substring(6);
 		int i = Integer.parseInt(Rollss);
 		if(getMessage(e).startsWith("!") && getMessage(e).indexOf("roll") == 1) {
 			sendMessage(e, "You rolled a " + (int)(Math.random()*i+1));
 		}
-	}
+			}
+			}
+		}
+		
+	
 
 	private void checkTicTacToe(MessageReceivedEvent e) {
 		if(e.getMessage().getContentDisplay().startsWith(":")) ticMsg = e.getMessage(); // reference to previous message so we can delete it
