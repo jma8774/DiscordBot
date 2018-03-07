@@ -28,12 +28,25 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 public class App extends ListenerAdapter {
 	
 	private boolean stop;
-	private final String KAPPA = "420687983365193729";
 	private static JDA bot;
+	
+	// tic-tac-toe variables
 	private String[][] ttt;
 	private static boolean tic;
 	private static int ticTurn;
 	private static Message ticMsg;
+	
+	private final String KAPPA = "420687983365193729";
+	private final String N1 = "1⃣";
+	private final String N2 = "2⃣";
+	private final String N3 = "3⃣";
+	private final String N4 = "4⃣";
+	private final String N5 = "5⃣";
+	private final String N6 = "6⃣";
+	private final String N7 = "7⃣";
+	private final String N8 = "8⃣";
+	private final String N9 = "9⃣";
+	
 	
     public static void main( String[] args ) throws LoginException, IllegalArgumentException, InterruptedException, RateLimitedException {
     	bot = new JDABuilder(AccountType.BOT).setToken("").buildBlocking();
@@ -56,10 +69,26 @@ public class App extends ListenerAdapter {
 		checkGreets(e);
 		briantic(e);
 		checkTicTacToe(e);
-//		randomReaction(e);
+		addReactionsTic(e);
     }
     
-    private void briantic(MessageReceivedEvent e) {
+
+	private void addReactionsTic(MessageReceivedEvent e) {
+		if(!e.getAuthor().isBot())return;
+		if(getMessage(e).startsWith(":")) {
+			e.getMessage().addReaction(N1).queue();
+			e.getMessage().addReaction(N2).queue();
+			e.getMessage().addReaction(N3).queue();
+			e.getMessage().addReaction(N4).queue();
+			e.getMessage().addReaction(N5).queue();
+			e.getMessage().addReaction(N6).queue();
+			e.getMessage().addReaction(N7).queue();
+			e.getMessage().addReaction(N8).queue();
+			e.getMessage().addReaction(N9).queue();
+		}
+	}
+
+	private void briantic(MessageReceivedEvent e) {
     	if(e.getAuthor().isBot())return;
     	String[] hand = {"rock","scissors", "paper"};
     	String hands = "I choose ";
@@ -71,12 +100,8 @@ public class App extends ListenerAdapter {
     }
 	@Override
     public void onMessageReactionAdd(MessageReactionAddEvent e) {
-    	
+		
     }
-
-	private void randomReaction(MessageReceivedEvent e) {
-		e.getMessage().addReaction(e.getGuild().getEmoteById(KAPPA)).queue();
-	}
 
 	private void brianStuff(MessageReceivedEvent e)
 	{
@@ -148,7 +173,7 @@ public class App extends ListenerAdapter {
 			}
 		}
 		e.getMessage().delete().queue(); // delete the user's message
-		sendMessage(e, s); // send out the new tic-tac-toe board 
+		sendMessage(e, s); // send out the new tic-tac-toe board
 		if(checkWin() != null) { // send another message and end the game if someone wins/tie
 			sendMessage(e, checkWin());
 			tic = false;
