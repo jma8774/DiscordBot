@@ -131,8 +131,8 @@ public class App extends ListenerAdapter {
 			}
 		}
 		e.getMessage().delete().queue(); // delete the user's message
-		sendMessage(e, s); // send the message 
-		if(checkWin() != null) { // send another message if someone wins/tie
+		sendMessage(e, s); // send out the new tic-tac-toe board 
+		if(checkWin() != null) { // send another message and end the game if someone wins/tie
 			sendMessage(e, checkWin());
 			tic = false;
 			ticTurn = 1;
