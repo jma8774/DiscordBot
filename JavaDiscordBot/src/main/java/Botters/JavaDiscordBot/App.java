@@ -123,15 +123,15 @@ public class App extends ListenerAdapter {
 						ticTurn = 1;
 					}
 			}
-			for(int row = 0; row < ttt.length; row ++) {
+			for(int row = 0; row < ttt.length; row ++) { // loop to add emotes to the string to be printed
 				for(int col = 0; col < ttt[0].length; col ++) {
 					s += ttt[row][col];
 				}
 				s += "\n";
 			}
 		}
-		sendMessage(e, s);
-		if(checkWin() != null) {
+		sendMessage(e, s); // send the message 
+		if(checkWin() != null) { // send another message if someone wins/tie
 			sendMessage(e, checkWin());
 			tic = false;
 			ticTurn = 1;
