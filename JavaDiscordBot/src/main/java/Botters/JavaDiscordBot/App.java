@@ -113,12 +113,12 @@ public class App extends ListenerAdapter {
 			int c = pick%3;
 			switch(ticTurn) {
 				case 1: // x's turn
-					if(ttt[r][c] == ":white_square_button:") {
+					if(ttt[r][c] == ":white_large_square: ") {
 						ttt[r][c] = ":heavy_multiplication_x:";
 						ticTurn = 2;
 					}
 				case 2: // o's turn
-					if(ttt[r][c] == ":white_square_button:") {
+					if(ttt[r][c] == ":white_large_square:") {
 						ttt[r][c] = ":white_circle:";
 						ticTurn = 1;
 					}
