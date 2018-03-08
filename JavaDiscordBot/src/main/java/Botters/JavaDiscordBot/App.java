@@ -1,29 +1,25 @@
 package Botters.JavaDiscordBot;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.security.auth.login.LoginException;
 
-import com.fasterxml.jackson.databind.deser.ValueInstantiator.Gettable;
+import org.apache.commons.text.RandomStringGenerator;
+import org.apache.commons.text.RandomStringGenerator.Builder;
 
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
-import net.dv8tion.jda.core.requests.RequestFuture;
+
 
 
 public class App extends ListenerAdapter {
@@ -51,14 +47,15 @@ public class App extends ListenerAdapter {
 	private final String N8 = "8⃣";
 	private final String N9 = "9⃣";
 	
-	
     public static void main( String[] args ) throws LoginException, IllegalArgumentException, InterruptedException, RateLimitedException {
     	bot = new JDABuilder(AccountType.BOT).setToken("").buildBlocking();
     	bot.addEventListener(new App());
-//    	begForDonations(1800000, bot); // 30 minutes
+//    	begForDonations(1800000); // 30 minutes
+    	changeName(1000);
     }
     
-    @Override
+
+	@Override
     public void onMessageReceived(MessageReceivedEvent e) {
 // 		brianStuff(e);
     	stop = false;
@@ -140,14 +137,16 @@ public class App extends ListenerAdapter {
 		// this works for other cases too, try it urself
 		switch(whosTurn) {
 			case 1: // x's turn
-				if(ttt[r][c] == ":white_medium_small_square:") {
+				if(ttt[r][c] == ":white_small_square:") {
 					ttt[r][c] = ":heavy_multiplication_x:";
 					whosTurn = 2;
+					numTurn ++;
 				}
 			case 2: // o's turn
-				if(ttt[r][c] == ":white_medium_small_square:") {
+				if(ttt[r][c] == ":white_small_square:") {
 					ttt[r][c] = ":white_circle:";
 					whosTurn = 1;
+					numTurn ++;
 				}
 		}
 		String s = "";
@@ -157,7 +156,6 @@ public class App extends ListenerAdapter {
 			}
 			s += "\n";
 		}
-		numTurn ++;
 		ticMsg.editMessage(s).queue();
 		String gameOverMsg = ticGameOver(e);
 		if(!gameOverMsg.isEmpty()) e.getChannel().sendMessage(gameOverMsg).queue();
@@ -166,10 +164,10 @@ public class App extends ListenerAdapter {
 	private String ticGameOver(MessageReactionAddEvent e) { // this function determines if the game is over or not, if it is over it returns an empty string
 		String s = "";
 		if(xWin()) {
-			s += "\nX wins!";
+			s += "X wins!";
 		}else if(oWin()) {
-			s += "\nO wins!";
-		}else if(numTurn == 9) s += "\nThis game ended in a draw!";
+			s += "O wins!";
+		}else if(numTurn == 9) s += "This game ended in a draw!";
 		if(!s.isEmpty()) {
 			ticRunning = false;
 			whosTurn = 1;
@@ -210,7 +208,7 @@ public class App extends ListenerAdapter {
 			ttt = new String[3][3];
 			for(int row = 0; row < ttt.length; row ++) { // loop to create new board game
 				for(int col = 0; col < ttt[0].length; col ++) {
-					ttt[row][col] = ":white_medium_small_square:";
+					ttt[row][col] = ":white_small_square:";
 					s += ttt[row][col];
 				}
 				s += "\n";
@@ -298,7 +296,7 @@ public class App extends ListenerAdapter {
 		}
 	}
 	
-	private static void begForDonations(int ms, final JDA bot) {
+	private static void begForDonations(int ms) {
 		Timer t = new Timer();
 		t.schedule(new TimerTask() {
 
@@ -306,6 +304,23 @@ public class App extends ListenerAdapter {
 		            public void run() {
 		            	bot.getTextChannelById("152954629993398272").sendMessage("If you like this bot, please consider donating RP to the creators, " 
 		            	+ bot.getUserById("152957206025863168").getAsMention() + " and " + bot.getUserById("152954180984635392").getAsMention() + ".").queue();
+		            }
+		        }, 100, ms); // ms = milleseconds until the next message, can alter this in the main function
+	}
+
+	private static void changeName(int ms) {
+		Timer t = new Timer();
+		final String MATT = "169259999300812800";
+		final String MARY = "197426338791948288";
+		final String STEVEN = "152954300933472256";
+		final Guild guild = bot.getGuildById("152954629993398272");
+		final RandomStringGenerator generator = new RandomStringGenerator.Builder().withinRange('a', 'z').build();
+		t.schedule(new TimerTask() {
+
+		            @Override
+		            public void run() {
+		            	guild.getController().setNickname(guild.getMemberById(MATT), generator.generate(20)).queue();
+		            	guild.getTextChannelById("420679175465336832").sendMessage(guild.getMemberById(MATT).getAsMention() + "'s name has changed to " + guild.getMemberById(MATT).getEffectiveName()).queue();
 		            }
 		        }, 100, ms); // ms = milleseconds until the next message, can alter this in the main function
 	}
