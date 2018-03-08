@@ -53,7 +53,7 @@ public class App extends ListenerAdapter {
     public static void main( String[] args ) throws LoginException, IllegalArgumentException, InterruptedException, RateLimitedException {
     	bot = new JDABuilder(AccountType.BOT).setToken("").buildBlocking();
     	bot.addEventListener(new App());
-    	begForDonations(1800000); // 30 minutes
+//    	begForDonations(1800000); // 30 minutes
 //    	randomName(2000);
     }
     
@@ -130,40 +130,56 @@ public class App extends ListenerAdapter {
     private void brianrps(MessageReceivedEvent e) {
     	if(e.getAuthor().isBot())return;
     	String[] hand = {"***rock***","***scissors***", "***paper***"};
-    	String hands = "I choose ";
+    	String hands = "I chose ";
     	String selfhand = "You chose ";
-    	if(getMessage(e).startsWith("!") && getMessage(e).indexOf("rps") == 1){
-    		hands +=  hand[(int)(Math.random()*hand.length)];
-    		sendMessage(e, selfhand + "***" + getMessage(e).substring(5) + "***" + " and "+ hands);	 
+    	hands +=  hand[(int)(Math.random()*hand.length)];
+    	if(getMessage(e).startsWith("`") && getMessage(e).indexOf("rps") == 1){
+    	if(getMessage(e).substring(5).equalsIgnoreCase("rock")) {
+    		sendMessage(e, selfhand + "***" + getMessage(e).substring(5) + "***" + " and "+ hands);return;
+    			}
+    	if(getMessage(e).substring(5).equalsIgnoreCase("paper")) {
+    		sendMessage(e, selfhand + "***" + getMessage(e).substring(5) + "***" + " and "+ hands);return;
+    			}
+    	if(getMessage(e).substring(5).equalsIgnoreCase("scissors")) {
+    		sendMessage(e, selfhand + "***" + getMessage(e).substring(5) + "***" + " and "+ hands);return;
+    			}
+    	if(!getMessage(e).substring(5).equalsIgnoreCase("rock") && !getMessage(e).substring(5).equalsIgnoreCase("paper") && !getMessage(e).substring(5).equalsIgnoreCase("scissors")) {
+    		sendMessage(e, "Please pick rock, paper, or scissors");
+    			}
+    		}	
     	}
-    }
+    	
+        	
+	
+
+    
     
     private void checkrps(MessageReceivedEvent e) {
-    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose rock and I choose scissors")) {
+    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose rock and I chose scissors")) {
     		sendMessage(e, "***You Win***");
     	}
-    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose rock and I choose paper")) {
+    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose rock and I chose paper")) {
     		sendMessage(e, "***You Lose***");
     	}
-    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose rock and I choose rock")) {
+    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose rock and I chose rock")) {
     		sendMessage(e, "***Draw***");
     	}
-    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose paper and I choose scissors")) {
+    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose paper and I chose scissors")) {
     		sendMessage(e, "***You Lose***");
     	}
-    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose paper and I choose paper")) {
+    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose paper and I chose paper")) {
     		sendMessage(e, "***Draw***");
     	}
-    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose paper and I choose rock")) {
+    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose paper and I chose rock")) {
     		sendMessage(e, "***You Win***");
     	}
-    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose scissors and I choose scissors")) {
+    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose scissors and I chose scissors")) {
     		sendMessage(e, "***Draw***");
     	}
-    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose scissors and I choose paper")) {
+    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose scissors and I chose paper")) {
     		sendMessage(e, "***You Win***");
     	}
-    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose scissors and I choose rock")) {
+    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose scissors and I chose rock")) {
     		sendMessage(e, "***You Lose***");
     	}
     }
@@ -342,7 +358,8 @@ public class App extends ListenerAdapter {
 					"`hardstuck - someone who is hardstuck in league \n" +
 					"`slap @user @user1 - slap someone with something \n" +
 					"`tic @someone - starts a tic-tac-toe game with that person\n" +
-					"`tic end - to end the tic-tac-toe game" +
+					"`tic end - to end the tic-tac-toe game \n" +
+					"`rps - play rock, paper, scissors with bot" +
 					"```");
 		}
 	}
