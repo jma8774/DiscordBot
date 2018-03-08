@@ -205,9 +205,8 @@ public class App extends ListenerAdapter {
 
 	private void initializeTicTacToe(MessageReceivedEvent e) {
 		if(e.getAuthor().isBot()) return;
-		if(!e.getMessage().getContentDisplay().startsWith("`tic")) return;
 		String s = "";
-		if(!ticRunning) { // create a new game is tic is false
+		if(!ticRunning && e.getMessage().getContentDisplay().equals("`tic")) { // create a new game is tic is false
 			ttt = new String[3][3];
 			for(int row = 0; row < ttt.length; row ++) { // loop to create new board game
 				for(int col = 0; col < ttt[0].length; col ++) {
@@ -217,13 +216,11 @@ public class App extends ListenerAdapter {
 				s += "\n";
 			}
 			sendMessage(e, s);
-		} else { // proceed if there is already a game
-			if(e.getMessage().getContentDisplay().equals("`tic end")) { // statement for if they want to end the games
+		} else if(ticRunning && e.getMessage().getContentDisplay().equals("`tic end")) { // statement for if they want to end the games
 				sendMessage(e, "This game of tic-tac-toe has ended.");
 				ticRunning = false; // turn to false to say that there is no tic-tac-tie running
 				whosTurn = 1; // set turn back to starting with x
 				return;
-			}
 		}
 	}
 	
