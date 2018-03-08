@@ -83,17 +83,21 @@ public class App extends ListenerAdapter {
     	if(getMessage(e).startsWith("!") && getMessage(e).indexOf("nick") ==1) {
     		String[] nick = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","1","2","3","4","5","6","7","8","9","0","!","@","#","$","%","&","A","B","C","D","E","F","G","H","I","G","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
     		String nickname = "";
+    		String nicknames = "";
     		final String Matt = "169259999300812800";
     		final String Mary = "197426338791948288";
-    		final String Steven = "152954300933472256";
-    		final String Sam = "195347541452128257";
     		for(int i = 0; i < 10; i++)
-    		nickname += nick[(int)(Math.random()*nick.length)];{
+    		nickname += nick[(int)(Math.random()*nick.length)];
+    		for(int i = 0; i <10; i++)
+    		nicknames += nick[(int)(Math.random()*nick.length)];{
     		final Guild guild = bot.getGuildById("152954629993398272");
-    		String pastmatt = guild.getMemberById(Matt).getNickname();
-    		guild.getController().setNickname(guild.getMemberById(Matt), nickname).queue();
-    		sendMessage(e, "**" + pastmatt + "**" + " changed to " + bot.getUserById(Matt).getAsMention());
-    			}
+    		String past = guild.getMemberById(Matt).getNickname();
+    		String pastmary = guild.getMemberById(Mary).getNickname();
+    		guild.getController().setNickname(guild.getMemberById(Matt), nickname).queue(); 
+    		guild.getController().setNickname(guild.getMemberById(Mary), nicknames).queue();
+    		sendMessage(e, "**" + past + "**" + " changed to " + bot.getUserById(Matt).getAsMention());
+    		sendMessage(e, "**" + pastmary + "**" + " changed to " + bot.getUserById(Mary).getAsMention());
+    		}
     		}
     	}
     		
