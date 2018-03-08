@@ -72,7 +72,7 @@ public class App extends ListenerAdapter {
 		brianrps(e); //command for rps
 		checkrps(e); //outcome for rps
 		briannick(e);
-		
+		brianbj(e);
 		initializeTicTacToe(e); //starts the tic-tac-toe game by sending the board message
 		addReactionsTic(e); //add emotes to the message once the event is recieved
     }
@@ -83,6 +83,31 @@ public class App extends ListenerAdapter {
     }
     
     
+    private void brianbj(MessageReceivedEvent e) {
+    	if(getMessage(e).startsWith("!") && getMessage(e).indexOf("blackjack")==1) {
+    	String[] Cards = {"A" , "2" , "3" , "4" , "5" , "6" , "7" , "8" , "9" , "10" ,"J" , "Q", "K"};
+    	String card1 = "";
+    	String card2 = "";
+    	String NPCcard1 = "";
+    	String NPCcard2 = "";
+    	for(int i = 0; i<1; i++)
+    	card1 += Cards[(int)(Math.random()*Cards.length)];
+    	card2 += Cards[(int)(Math.random()*Cards.length)];
+    	NPCcard1 += Cards[(int)(Math.random()*Cards.length)];
+    	NPCcard2 += Cards[(int)(Math.random()*Cards.length)];
+    	sendMessage(e, "Your Hand: \n" 
+    					+ "`" + card1 + "`" 
+    					+ " " 
+    					+ "`" + card2 + "`"
+    					+ "\nBots Hand: \n"
+    					+ "`" + NPCcard1 + "`" 
+    					+ " " 
+    					+ "`" + NPCcard2 + "`");
+    	if(getMessage(e).startsWith("!") && getMessage(e).indexOf("hit")==1) {
+    		sendMessage(e, "test");
+    	}
+    	}
+    }
     private void briannick(MessageReceivedEvent e) {
     	
     	if(getMessage(e).startsWith("!") && getMessage(e).indexOf("nick") ==1) {
@@ -148,12 +173,6 @@ public class App extends ListenerAdapter {
     			}
     		}	
     	}
-    	
-        	
-	
-
-    
-    
     private void checkrps(MessageReceivedEvent e) {
     	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose rock and I chose scissors")) {
     		sendMessage(e, "***You Win***");
