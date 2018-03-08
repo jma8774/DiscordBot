@@ -34,7 +34,7 @@ public class App extends ListenerAdapter {
 	
 	// tic-tac-toe variables
 	private String[][] ttt;
-	private static boolean tic = false;
+	private static boolean ticRunning = false;
 	private static int whosTurn = 1;
 	private static int numTurn = 0;
 	private static Message ticMsg;
@@ -69,13 +69,13 @@ public class App extends ListenerAdapter {
     	checkHardstuck(e);
 		checkGreets(e);
 		briantic(e);
-		checkTicTacToe(e);
-		addReactionsTic(e);
+		checkTicTacToe(e); //starts the tic-tac-toe game by sending the board message
+		addReactionsTic(e); //add emotes to the message once the event is recieved
     }
     
     @Override
     public void onMessageReactionAdd(MessageReactionAddEvent e) {
-    	ticMove(e);
+    	ticMove(e); //when people touch the emotes, it would trigger this function if there is a tic-tac-toe game going on
     }
     
     private void brianStuff(MessageReceivedEvent e)
@@ -121,19 +121,21 @@ public class App extends ListenerAdapter {
 			e.getMessage().addReaction(N7).queue();
 			e.getMessage().addReaction(N8).queue();
 			e.getMessage().addReaction(N9).queue();
-			tic = true;
-			ticMsg = e.getMessage();
+			ticRunning = true; // game official starts
+			ticMsg = e.getMessage(); // saves this message in a variable to edit it later
 		}
 	}
 
-
 	private void ticMove(MessageReactionAddEvent e) {
-		if(!tic) return;
-		if(e.getUser().getId().equals(botID)) return;
-		int pick = getPick(e);
+		if(!ticRunning) return; // stops running the function when the game is not running
+		if(e.getUser().getId().equals(botID)) return; // makes sure to not log the events from the bot
+		int pick = getPick(e); // determine which emote they reacted to and return the integer value of it
 		if(pick < 0 || pick > 8) return;
-		int r = pick/3;
+		int r = pick/3; 
 		int c = pick%3;
+		// ill explain how r and c works, lets say you want the middle tile which is in array [1][1], the pick int that corresponds to that is 4
+		// int(4/3) is rounded to 1 and 4mod3 is equal to 1. that's how we get array [1][1], which would give us the position to the middle tile of the board
+		// this works for other cases too, try it urself
 		switch(whosTurn) {
 			case 1: // x's turn
 				if(ttt[r][c] == ":white_medium_small_square:") {
@@ -147,7 +149,7 @@ public class App extends ListenerAdapter {
 				}
 		}
 		String s = "";
-		for(int row = 0; row < ttt.length; row ++) { // loop to add emotes to the string to be printed
+		for(int row = 0; row < ttt.length; row ++) { // loop to add x/o emotes to the string to be printed
 			for(int col = 0; col < ttt[0].length; col ++) {
 				s += ttt[row][col];
 			}
@@ -159,8 +161,7 @@ public class App extends ListenerAdapter {
 		if(!gameOverMsg.isEmpty()) e.getChannel().sendMessage(gameOverMsg).queue();
 	}
 
-	private String ticGameOver(MessageReactionAddEvent e) {
-		System.out.println(numTurn);
+	private String ticGameOver(MessageReactionAddEvent e) { // this function determines if the game is over or not, if it is over it returns an empty string
 		String s = "";
 		if(xWin()) {
 			s += "\nX wins!";
@@ -168,7 +169,7 @@ public class App extends ListenerAdapter {
 			s += "\nO wins!";
 		}else if(numTurn == 9) s += "\nThis game ended in a draw!";
 		if(!s.isEmpty()) {
-			tic = false;
+			ticRunning = false;
 			whosTurn = 1;
 			numTurn = 0;
 		}
@@ -176,12 +177,12 @@ public class App extends ListenerAdapter {
 	}
 	
 
-	private boolean oWin() {
+	private boolean oWin() { // determine if O wins or not
 		String o = ":white_circle:";
 		return false;
 	}
 
-	private boolean xWin() {
+	private boolean xWin() { // determine if X wins or not
 		String x = ":heavy_multiplication_x:";
 		return false;
 	}
@@ -200,16 +201,11 @@ public class App extends ListenerAdapter {
 		return -1;
 	}
 
-			
-		
-		
-	
-
 	private void checkTicTacToe(MessageReceivedEvent e) {
 		if(e.getAuthor().isBot()) return;
 		if(!e.getMessage().getContentDisplay().startsWith("`tic")) return;
 		String s = "";
-		if(!tic) { // create a new game is tic is false
+		if(!ticRunning) { // create a new game is tic is false
 			ttt = new String[3][3];
 			for(int row = 0; row < ttt.length; row ++) { // loop to create new board game
 				for(int col = 0; col < ttt[0].length; col ++) {
@@ -222,7 +218,7 @@ public class App extends ListenerAdapter {
 		} else { // proceed if there is already a game
 			if(e.getMessage().getContentDisplay().equals("`tic end")) { // statement for if they want to end the games
 				sendMessage(e, "This game of tic-tac-toe has ended.");
-				tic = false; // turn to false to say that there is no tic-tac-tie running
+				ticRunning = false; // turn to false to say that there is no tic-tac-tie running
 				whosTurn = 1; // set turn back to starting with x
 				return;
 			}
