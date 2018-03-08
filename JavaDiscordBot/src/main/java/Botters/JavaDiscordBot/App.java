@@ -48,13 +48,12 @@ public class App extends ListenerAdapter {
     	bot = new JDABuilder(AccountType.BOT).setToken("").buildBlocking();
     	bot.addEventListener(new App());
 //    	begForDonations(1800000); // 30 minutes
-    	randomName(2000);
+//    	randomName(2000);
     }
     
 
 	@Override
     public void onMessageReceived(MessageReceivedEvent e) {
-// 		brianStuff(e);
     	stop = false;
     	checkCurses(e);
     	if(stop) return;
@@ -63,7 +62,9 @@ public class App extends ListenerAdapter {
     	checkRoll(e);
     	checkHardstuck(e);
 		checkGreets(e);
-		briantic(e);
+		brianroll(e); //command for roll #
+		brianrps(e); //command for rps
+		checkrps(e); //outcome for rps
 		
 		initializeTicTacToe(e); //starts the tic-tac-toe game by sending the board message
 		addReactionsTic(e); //add emotes to the message once the event is recieved
@@ -74,16 +75,7 @@ public class App extends ListenerAdapter {
     	ticMove(e); //when people touch the emotes, it would trigger this function if there is a tic-tac-toe game going on
     }
     
-    private void brianStuff(MessageReceivedEvent e)
-    {
-    	if(e.getAuthor().isBot());
-    	if(e.getMessage().getContentDisplay().equals("test")) {
-    		e.getChannel().sendMessage("hello").queue();
-    	}
-    	
-    	if(e.getMessage().getContentDisplay().equals("test1")) {
-    		e.getChannel().sendMessage("test2 " + e.getAuthor().getAsMention()).queue();
-    	}
+    private void brianroll(MessageReceivedEvent e){
     	if(getMessage(e).startsWith("!") && getMessage(e).indexOf("roll") == 1) {
     		String Rollss = getMessage(e).substring(6);
     		int i = Integer.parseInt(Rollss);
@@ -91,14 +83,44 @@ public class App extends ListenerAdapter {
     	}
     }
 
-    private void briantic(MessageReceivedEvent e) {
+    private void brianrps(MessageReceivedEvent e) {
     	if(e.getAuthor().isBot())return;
-    	String[] hand = {"rock","scissors", "paper"};
+    	String[] hand = {"***rock***","***scissors***", "***paper***"};
     	String hands = "I choose ";
     	String selfhand = "You chose ";
     	if(getMessage(e).startsWith("!") && getMessage(e).indexOf("rps") == 1){
     		hands +=  hand[(int)(Math.random()*hand.length)];
-    		sendMessage(e, selfhand + getMessage(e).substring(5) + " and " + hands);	 
+    		sendMessage(e, selfhand + "***" + getMessage(e).substring(5) + "***" + " and "+ hands);	 
+    	}
+    }
+    
+    private void checkrps(MessageReceivedEvent e) {
+    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose rock and I choose scissors")) {
+    		sendMessage(e, "***You Win***");
+    	}
+    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose rock and I choose paper")) {
+    		sendMessage(e, "***You Lose***");
+    	}
+    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose rock and I choose rock")) {
+    		sendMessage(e, "***Draw***");
+    	}
+    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose paper and I choose scissors")) {
+    		sendMessage(e, "***You Lose***");
+    	}
+    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose paper and I choose paper")) {
+    		sendMessage(e, "***Draw***");
+    	}
+    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose paper and I choose rock")) {
+    		sendMessage(e, "***You Win***");
+    	}
+    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose scissors and I choose scissors")) {
+    		sendMessage(e, "***Draw***");
+    	}
+    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose scissors and I choose paper")) {
+    		sendMessage(e, "***You Win***");
+    	}
+    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose scissors and I choose rock")) {
+    		sendMessage(e, "***You Lose***");
     	}
     }
     
