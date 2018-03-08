@@ -16,6 +16,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import net.dv8tion.jda.core.managers.GuildController;
 
 
 
@@ -65,6 +66,7 @@ public class App extends ListenerAdapter {
 		brianroll(e); //command for roll #
 		brianrps(e); //command for rps
 		checkrps(e); //outcome for rps
+		briannick(e);
 		
 		initializeTicTacToe(e); //starts the tic-tac-toe game by sending the board message
 		addReactionsTic(e); //add emotes to the message once the event is recieved
@@ -75,7 +77,27 @@ public class App extends ListenerAdapter {
     	ticMove(e); //when people touch the emotes, it would trigger this function if there is a tic-tac-toe game going on
     }
     
-    private void brianroll(MessageReceivedEvent e){
+    
+    private void briannick(MessageReceivedEvent e) {
+    	
+    	if(getMessage(e).startsWith("!") && getMessage(e).indexOf("nick") ==1) {
+    		String[] nick = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","1","2","3","4","5","6","7","8","9","0","!","@","#","$","%","&","A","B","C","D","E","F","G","H","I","G","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
+    		String nickname = "";
+    		final String Matt = "169259999300812800";
+    		final String Mary = "197426338791948288";
+    		final String Steven = "152954300933472256";
+    		final String Sam = "195347541452128257";
+    		for(int i = 0; i < 10; i++)
+    		nickname += nick[(int)(Math.random()*nick.length)];{
+    		final Guild guild = bot.getGuildById("152954629993398272");
+    		String pastmatt = guild.getMemberById(Matt).getNickname();
+    		guild.getController().setNickname(guild.getMemberById(Matt), nickname).queue();
+    		sendMessage(e, "**" + pastmatt + "**" + " changed to " + bot.getUserById(Matt).getAsMention());
+    			}
+    		}
+    	}
+    		
+    private void brianroll(MessageReceivedEvent e) {
     	if(getMessage(e).startsWith("!") && getMessage(e).indexOf("roll") == 1) {
     		String Rollss = getMessage(e).substring(6);
     		int i = Integer.parseInt(Rollss);
