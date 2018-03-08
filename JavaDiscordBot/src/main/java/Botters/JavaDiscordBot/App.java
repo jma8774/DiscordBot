@@ -39,6 +39,7 @@ public class App extends ListenerAdapter {
 	private static int numTurn = 0;
 	private static Message ticMsg;
 	
+	//emote string and unicode
 	private final String KAPPA = "420687983365193729";
 	private final String N1 = "1⃣";
 	private final String N2 = "2⃣";
@@ -256,6 +257,7 @@ public class App extends ListenerAdapter {
 					"`roll - rolls a 6 sided dice \n" +
 					"`hardstuck - someone who is hardstuck in league \n" +
 					"`slap @user @user1 - slap someone with something \n" +
+					"`tic - starts a tic-tac-toe game \n" +
 					"```");
 		}
 	}
