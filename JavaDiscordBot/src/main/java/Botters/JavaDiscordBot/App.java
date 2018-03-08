@@ -53,7 +53,7 @@ public class App extends ListenerAdapter {
     public static void main( String[] args ) throws LoginException, IllegalArgumentException, InterruptedException, RateLimitedException {
     	bot = new JDABuilder(AccountType.BOT).setToken("").buildBlocking();
     	bot.addEventListener(new App());
-//    	begForDonations(1800000); // 30 minutes
+    	begForDonations(1800000); // 30 minutes
 //    	randomName(2000);
     }
     
@@ -391,8 +391,8 @@ public class App extends ListenerAdapter {
 
 		            @Override
 		            public void run() {
-		            	bot.getTextChannelById("152954629993398272").sendMessage("If you like this bot, please consider donating RP to the creators, " 
-		            	+ bot.getUserById("152957206025863168").getAsMention() + " and " + bot.getUserById("152954180984635392").getAsMention() + ".").queue();
+		            	bot.getTextChannelById("420679175465336832").sendMessage("If you like this bot, please consider donating RP to the creators, " 
+		            	+ bot.getUserById("152954180984635392").getAsMention() + " and " + bot.getUserById("152957206025863168").getAsMention() + ".").queue();
 		            }
 		        }, 100, ms); // ms = milleseconds until the next message, can alter this in the main function
 	}
