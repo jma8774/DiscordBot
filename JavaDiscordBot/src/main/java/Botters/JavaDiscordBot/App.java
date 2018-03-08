@@ -70,7 +70,8 @@ public class App extends ListenerAdapter {
     	checkHardstuck(e);
 		checkGreets(e);
 		briantic(e);
-		checkTicTacToe(e); //starts the tic-tac-toe game by sending the board message
+		
+		initializeTicTacToe(e); //starts the tic-tac-toe game by sending the board message
 		addReactionsTic(e); //add emotes to the message once the event is recieved
     }
     
@@ -202,7 +203,7 @@ public class App extends ListenerAdapter {
 		return -1;
 	}
 
-	private void checkTicTacToe(MessageReceivedEvent e) {
+	private void initializeTicTacToe(MessageReceivedEvent e) {
 		if(e.getAuthor().isBot()) return;
 		if(!e.getMessage().getContentDisplay().startsWith("`tic")) return;
 		String s = "";
