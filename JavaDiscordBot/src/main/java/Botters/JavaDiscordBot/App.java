@@ -12,6 +12,7 @@ import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
@@ -29,12 +30,16 @@ public class App extends ListenerAdapter {
 	// tic-tac-toe variables
 	private String[][] ttt;
 	private static boolean ticRunning = false;
-	private static int whosTurn = 1;
+	private static User whosTurn;
 	private static int numTurn = 0;
+	private static User player1;
+	private static User player2;
 	private static Message ticMsg;
 	
 	//emote string and unicode
 	private final String KAPPA = "420687983365193729";
+	private final String BIBLETHUMP = "420687417272565770";
+	private final String JEBAITED = "420687706616627200";
 	private final String N1 = "1⃣";
 	private final String N2 = "2⃣";
 	private final String N3 = "3⃣";
@@ -186,6 +191,7 @@ public class App extends ListenerAdapter {
 	private void ticMove(MessageReactionAddEvent e) {
 		if(!ticRunning) return; // stops running the function when the game is not running
 		if(e.getUser().getId().equals(botID)) return; // makes sure to not log the events from the bot
+		if(e.getUser() != whosTurn) return;
 		int pick = getPick(e); // determine which emote they reacted to and return the integer value of it
 		if(pick < 0 || pick > 8) return;
 		String gameOverMsg = "";
@@ -194,21 +200,20 @@ public class App extends ListenerAdapter {
 		// ill explain how r and c works, lets say you want the middle tile which is in array [1][1], the pick int that corresponds to that is 4
 		// int(4/3) is rounded to 1 and 4mod3 is equal to 1. that's how we get array [1][1], which would give us the position to the middle tile of the board
 		// this works for other cases too, try it urself
-		switch(whosTurn) {
-			case 1: // x's turn
-				if(ttt[r][c] == ":white_small_square:") {
-					ttt[r][c] = ":heavy_multiplication_x:";
-					gameOverMsg = ticGameOver(e);
-					whosTurn = 2;
-					numTurn ++;
-				}
-			case 2: // o's turn
-				if(ttt[r][c] == ":white_small_square:") {
-					ttt[r][c] = ":white_circle:";
-					gameOverMsg = ticGameOver(e);
-					whosTurn = 1;
-					numTurn ++;
-				}
+		if(whosTurn == player1) {
+			if(ttt[r][c] == ":white_small_square:") {
+				ttt[r][c] = ":heavy_multiplication_x:";
+				gameOverMsg = ticGameOver(e);
+				whosTurn = player2;
+				numTurn ++;
+			}
+		} else {
+			if(ttt[r][c] == ":white_small_square:") {
+				ttt[r][c] = ":white_circle:";
+				gameOverMsg = ticGameOver(e);
+				whosTurn = player1;
+				numTurn ++;
+			}
 		}
 		String s = "";
 		for(int row = 0; row < ttt.length; row ++) { // loop to add x/o emotes to the string to be printed
@@ -223,14 +228,13 @@ public class App extends ListenerAdapter {
 
 	private String ticGameOver(MessageReactionAddEvent e) { // this function determines if the game is over or not, if it is over it returns an empty string
 		String s = "";
-		if(whosTurn == 1 && checkWin(":heavy_multiplication_x:")) {
-			s += "X wins!";
-		}else if(whosTurn == 2 && checkWin(":white_circle:")) {
-			s += "O wins!";
+		if(whosTurn == player1 && checkWin(":heavy_multiplication_x:")) {
+			s += e.getUser().getAsMention() + " wins!";
+		}else if(whosTurn == player2 && checkWin(":white_circle:")) {
+			s += e.getUser().getAsMention() + " wins!";
 		}else if(numTurn == 9) s += "This game ended in a draw!";
 		if(!s.isEmpty()) {
 			ticRunning = false;
-			whosTurn = 1;
 			numTurn = 0;
 		}
 		return s;
@@ -273,7 +277,23 @@ public class App extends ListenerAdapter {
 	private void initializeTicTacToe(MessageReceivedEvent e) {
 		if(e.getAuthor().isBot()) return;
 		String s = "";
-		if(!ticRunning && e.getMessage().getContentDisplay().equals("`tic")) { // create a new game is tic is false
+		if(!ticRunning && e.getMessage().getContentDisplay().startsWith("`tic")) { // create a new game
+			if(e.getMessage().getMentionedUsers().size() < 1) { // if they dont mention someone to play with, return
+				sendMessage(e, "You need to mention someone to play with using @someone");
+				return;
+			}
+			player1 = e.getAuthor();
+			player2 = e.getMessage().getMentionedUsers().get(0);
+			if(player1 == player2) { // if they want to play with themself, return
+				sendMessage(e, "Why are you playing with yourself? " + e.getGuild().getEmoteById(BIBLETHUMP).getAsMention());
+				return;
+			}
+			if(player2.isBot()) { // if they want to play against a bot, return
+				sendMessage(e, "Why are you playing with a robot? You wanna get rekt? " + e.getGuild().getEmoteById(JEBAITED).getAsMention());
+				return;
+			}
+			whosTurn = player1;
+			sendMessage(e, "Player 1  (X): " + player1.getAsMention() + "\nPlayer 2 (O): " + player2.getAsMention());
 			ttt = new String[3][3];
 			for(int row = 0; row < ttt.length; row ++) { // loop to create new board game
 				for(int col = 0; col < ttt[0].length; col ++) {
@@ -286,7 +306,6 @@ public class App extends ListenerAdapter {
 		} else if(ticRunning && e.getMessage().getContentDisplay().equals("`tic end")) { // statement for if they want to end the games
 				sendMessage(e, "This game of tic-tac-toe has ended.");
 				ticRunning = false; // turn to false to say that there is no tic-tac-tie running
-				whosTurn = 1; // set turn back to starting with x
 				return;
 		}
 	}
@@ -322,7 +341,8 @@ public class App extends ListenerAdapter {
 					"`roll - rolls a 6 sided dice \n" +
 					"`hardstuck - someone who is hardstuck in league \n" +
 					"`slap @user @user1 - slap someone with something \n" +
-					"`tic - starts a tic-tac-toe game \n" +
+					"`tic @someone - starts a tic-tac-toe game with that person\n" +
+					"`tic end - to end the tic-tac-toe game" +
 					"```");
 		}
 	}
