@@ -22,10 +22,5 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Jimmy/Desktop/commons-text-1.2/commons-text-1.2.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Jimmy/Desktop/commons-text-1.2/commons-text-1.2-javadoc.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Jimmy/Desktop/commons-text-1.2/commons-text-1.2-sources.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Jimmy/Desktop/commons-text-1.2/commons-text-1.2-tests.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Jimmy/Desktop/commons-text-1.2/commons-text-1.2-test-sources.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

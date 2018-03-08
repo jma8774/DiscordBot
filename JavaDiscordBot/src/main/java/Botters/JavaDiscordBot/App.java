@@ -6,9 +6,6 @@ import java.util.TimerTask;
 
 import javax.security.auth.login.LoginException;
 
-import org.apache.commons.text.RandomStringGenerator;
-import org.apache.commons.text.RandomStringGenerator.Builder;
-
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
@@ -314,18 +311,22 @@ public class App extends ListenerAdapter {
 		final String MARY = "197426338791948288";
 		final String STEVEN = "152954300933472256";
 		final Guild guild = bot.getGuildById("152954629993398272");
-		final RandomStringGenerator generator = new RandomStringGenerator.Builder().withinRange('a', 'z').build();
 		t.schedule(new TimerTask() {
 
 		            @Override
 		            public void run() {
-		            	guild.getController().setNickname(guild.getMemberById(MATT), generator.generate(20)).queue();
-		            	guild.getTextChannelById("420679175465336832").sendMessage(guild.getMemberById(MATT).getAsMention() + "'s name has changed to " + guild.getMemberById(MATT).getEffectiveName()).queue();
+		            	guild.getController().setNickname(guild.getMemberById(MARY), randomName()).queue();
+		            	guild.getTextChannelById("420679175465336832").sendMessage(guild.getMemberById(MARY).getAsMention() + "'s name has changed to " + guild.getMemberById(MARY).getEffectiveName()).queue();
 		            }
 		        }, 100, ms); // ms = milleseconds until the next message, can alter this in the main function
 	}
 
-    public void checkCurses(MessageReceivedEvent e) {
+    protected static String randomName() {
+    	return "";
+	}
+
+
+	public void checkCurses(MessageReceivedEvent e) {
     	String[] swears = {"asshole", "bastard", "bitch", "crap", "cunt", "fuck", "nigga","nigger","shit","son of a bitch","faggot"};
     	if(e.getAuthor().isBot()) return;
     	for(int i = 0; i < swears.length; i ++) { // check for all possible greetings
