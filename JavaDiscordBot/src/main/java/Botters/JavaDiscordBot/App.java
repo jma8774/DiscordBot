@@ -23,17 +23,20 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import net.dv8tion.jda.core.requests.RequestFuture;
 
 
 public class App extends ListenerAdapter {
 	
 	private boolean stop;
 	private static JDA bot;
+	private final static String botID = "420395938272641034";
 	
 	// tic-tac-toe variables
 	private String[][] ttt;
-	private static boolean tic;
-	private static int ticTurn;
+	private static boolean tic = false;
+	private static int whosTurn = 1;
+	private static int numTurn = 0;
 	private static Message ticMsg;
 	
 	private final String KAPPA = "420687983365193729";
@@ -52,13 +55,11 @@ public class App extends ListenerAdapter {
     	bot = new JDABuilder(AccountType.BOT).setToken("").buildBlocking();
     	bot.addEventListener(new App());
 //    	begForDonations(1800000, bot); // 30 minutes
-    	tic = false;
-    	ticTurn = 1;
     }
     
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
- //		brianStuff(e);
+// 		brianStuff(e);
     	stop = false;
     	checkCurses(e);
     	if(stop) return;
@@ -72,7 +73,42 @@ public class App extends ListenerAdapter {
 		addReactionsTic(e);
     }
     
+    @Override
+    public void onMessageReactionAdd(MessageReactionAddEvent e) {
+    	ticMove(e);
+    }
+    
+    private void brianStuff(MessageReceivedEvent e)
+    {
+    	if(e.getAuthor().isBot());
+    	if(e.getMessage().getContentDisplay().equals("test")) {
+    		e.getChannel().sendMessage("hello").queue();
+    	}
+    	
+    	if(e.getMessage().getContentDisplay().equals("test1")) {
+    		e.getChannel().sendMessage("test2 " + e.getAuthor().getAsMention()).queue();
+    	}
+    	if(getMessage(e).startsWith("!") && getMessage(e).indexOf("roll") == 1) {
+    		String Rollss = getMessage(e).substring(6);
+    		int i = Integer.parseInt(Rollss);
+    		sendMessage(e, "You rolled a " + (int)(Math.random()*i+1));
+    	}
+    }
 
+    private void briantic(MessageReceivedEvent e) {
+    	if(e.getAuthor().isBot())return;
+    	String[] hand = {"rock","scissors", "paper"};
+    	String hands = "I choose ";
+    	String selfhand = "You chose ";
+    	if(getMessage(e).startsWith("!") && getMessage(e).indexOf("rps") == 1){
+    		hands +=  hand[(int)(Math.random()*hand.length)];
+    		sendMessage(e, selfhand + getMessage(e).substring(5) + " and " + hands);	 
+    	}
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //START OF TIC-TAC-TOE CODE
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	private void addReactionsTic(MessageReceivedEvent e) {
 		if(!e.getAuthor().isBot())return;
 		if(getMessage(e).startsWith(":")) {
@@ -85,50 +121,93 @@ public class App extends ListenerAdapter {
 			e.getMessage().addReaction(N7).queue();
 			e.getMessage().addReaction(N8).queue();
 			e.getMessage().addReaction(N9).queue();
+			tic = true;
+			ticMsg = e.getMessage();
 		}
 	}
 
-	private void briantic(MessageReceivedEvent e) {
-    	if(e.getAuthor().isBot())return;
-    	String[] hand = {"rock","scissors", "paper"};
-    	String hands = "I choose ";
-    	String selfhand = "You chose ";
-    	if(getMessage(e).startsWith("!") && getMessage(e).indexOf("rps") == 1){
-    		hands +=  hand[(int)(Math.random()*hand.length)];
-    		sendMessage(e, selfhand + getMessage(e).substring(5) + " and " + hands);	 
-    	}
-    }
-	@Override
-    public void onMessageReactionAdd(MessageReactionAddEvent e) {
-		
-    }
 
-	private void brianStuff(MessageReceivedEvent e)
-	{
-		// TODO Auto-generated method stub
-		if(e.getAuthor().isBot());
-		if(e.getMessage().getContentDisplay().equals("test")) {
-			e.getChannel().sendMessage("hello").queue();
-    	}
-    	
-		if(e.getMessage().getContentDisplay().equals("test1")) {
-    		e.getChannel().sendMessage("test2 " + e.getAuthor().getAsMention()).queue();
-    	}
-		String Rollss = getMessage(e).substring(6);
-		int i = Integer.parseInt(Rollss);
-		if(getMessage(e).startsWith("!") && getMessage(e).indexOf("roll") == 1) {
-			sendMessage(e, "You rolled a " + (int)(Math.random()*i+1));
+	private void ticMove(MessageReactionAddEvent e) {
+		if(!tic) return;
+		if(e.getUser().getId().equals(botID)) return;
+		int pick = getPick(e);
+		if(pick < 0 || pick > 8) return;
+		int r = pick/3;
+		int c = pick%3;
+		switch(whosTurn) {
+			case 1: // x's turn
+				if(ttt[r][c] == ":white_medium_small_square:") {
+					ttt[r][c] = ":heavy_multiplication_x:";
+					whosTurn = 2;
+				}
+			case 2: // o's turn
+				if(ttt[r][c] == ":white_medium_small_square:") {
+					ttt[r][c] = ":white_circle:";
+					whosTurn = 1;
+				}
 		}
+		String s = "";
+		for(int row = 0; row < ttt.length; row ++) { // loop to add emotes to the string to be printed
+			for(int col = 0; col < ttt[0].length; col ++) {
+				s += ttt[row][col];
+			}
+			s += "\n";
+		}
+		numTurn ++;
+		ticMsg.editMessage(s).queue();
+		String gameOverMsg = ticGameOver(e);
+		if(!gameOverMsg.isEmpty()) e.getChannel().sendMessage(gameOverMsg).queue();
 	}
+
+	private String ticGameOver(MessageReactionAddEvent e) {
+		System.out.println(numTurn);
+		String s = "";
+		if(xWin()) {
+			s += "\nX wins!";
+		}else if(oWin()) {
+			s += "\nO wins!";
+		}else if(numTurn == 9) s += "\nThis game ended in a draw!";
+		if(!s.isEmpty()) {
+			tic = false;
+			whosTurn = 1;
+			numTurn = 0;
+		}
+		return s;
+	}
+	
+
+	private boolean oWin() {
+		String o = ":white_circle:";
+		return false;
+	}
+
+	private boolean xWin() {
+		String x = ":heavy_multiplication_x:";
+		return false;
+	}
+
+	private int getPick(MessageReactionAddEvent e) {
+		String emoteReacted = e.getReactionEmote().getName();
+		if(emoteReacted.equals(N1)) return 0;
+		else if(emoteReacted.equals(N2)) return 1;
+		else if(emoteReacted.equals(N3)) return 2;
+		else if(emoteReacted.equals(N4)) return 3;
+		else if(emoteReacted.equals(N5)) return 4;
+		else if(emoteReacted.equals(N6)) return 5;
+		else if(emoteReacted.equals(N7)) return 6;
+		else if(emoteReacted.equals(N8)) return 7;
+		else if(emoteReacted.equals(N9)) return 8;
+		return -1;
+	}
+
 			
 		
 		
 	
 
 	private void checkTicTacToe(MessageReceivedEvent e) {
-		if(e.getMessage().getContentDisplay().startsWith(":")) ticMsg = e.getMessage(); // reference to previous message so we can delete it
 		if(e.getAuthor().isBot()) return;
-		if(!e.getMessage().getContentDisplay().startsWith("`") && !(e.getMessage().getContentDisplay().indexOf("tic") == 1)) return;
+		if(!e.getMessage().getContentDisplay().startsWith("`tic")) return;
 		String s = "";
 		if(!tic) { // create a new game is tic is false
 			ttt = new String[3][3];
@@ -139,51 +218,20 @@ public class App extends ListenerAdapter {
 				}
 				s += "\n";
 			}
-			tic = true; // tic is to make sure that there is only one tic-tac-toe running at once
+			sendMessage(e, s);
 		} else { // proceed if there is already a game
-			ticMsg.delete().queue(); // delete the previous tic-tac-toe board message
 			if(e.getMessage().getContentDisplay().equals("`tic end")) { // statement for if they want to end the games
 				sendMessage(e, "This game of tic-tac-toe has ended.");
 				tic = false; // turn to false to say that there is no tic-tac-tie running
-				ticTurn = 1; // set turn back to starting with x
+				whosTurn = 1; // set turn back to starting with x
 				return;
 			}
-			if(e.getMessage().getContentDisplay().length() < 6) return;
-			int pick = Integer.parseInt(e.getMessage().getContentDisplay().substring(5, 6)) - 1;
-			if(pick < 0 || pick > 8) return;
-			int r = pick/3;
-			int c = pick%3;
-			switch(ticTurn) {
-				case 1: // x's turn
-					if(ttt[r][c] == ":white_medium_small_square:") {
-						ttt[r][c] = ":heavy_multiplication_x:";
-						ticTurn = 2;
-					}
-				case 2: // o's turn
-					if(ttt[r][c] == ":white_medium_small_square:") {
-						ttt[r][c] = ":white_circle:";
-						ticTurn = 1;
-					}
-			}
-			for(int row = 0; row < ttt.length; row ++) { // loop to add emotes to the string to be printed
-				for(int col = 0; col < ttt[0].length; col ++) {
-					s += ttt[row][col];
-				}
-				s += "\n";
-			}
-		}
-		e.getMessage().delete().queue(); // delete the user's message
-		sendMessage(e, s); // send out the new tic-tac-toe board
-		if(checkWin() != null) { // send another message and end the game if someone wins/tie
-			sendMessage(e, checkWin());
-			tic = false;
-			ticTurn = 1;
 		}
 	}
 	
-	private String checkWin() {
-		return null;
-	}
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//END OF TIC-TAC-TOE CODE
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	private void checkSlap(MessageReceivedEvent e) {
         if(e.getAuthor().isBot()) return;
