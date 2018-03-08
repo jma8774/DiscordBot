@@ -48,7 +48,7 @@ public class App extends ListenerAdapter {
     	bot = new JDABuilder(AccountType.BOT).setToken("").buildBlocking();
     	bot.addEventListener(new App());
 //    	begForDonations(1800000); // 30 minutes
-    	changeName(1000);
+    	randomName(2000);
     }
     
 
@@ -305,7 +305,7 @@ public class App extends ListenerAdapter {
 		        }, 100, ms); // ms = milleseconds until the next message, can alter this in the main function
 	}
 
-	private static void changeName(int ms) {
+	private static void randomName(int ms) {
 		Timer t = new Timer();
 		final String MATT = "169259999300812800";
 		final String MARY = "197426338791948288";
@@ -315,17 +315,25 @@ public class App extends ListenerAdapter {
 
 		            @Override
 		            public void run() {
+		            	String oldName = guild.getMemberById(MARY).getNickname();
 		            	guild.getController().setNickname(guild.getMemberById(MARY), randomName()).queue();
-		            	guild.getTextChannelById("420679175465336832").sendMessage(guild.getMemberById(MARY).getAsMention() + "'s name has changed to " + guild.getMemberById(MARY).getEffectiveName()).queue();
+		            	guild.getTextChannelById("420679175465336832").sendMessage(guild.getMemberById(MARY).getAsMention() + "'s name has changed from " + oldName).queue();
 		            }
 		        }, 100, ms); // ms = milleseconds until the next message, can alter this in the main function
 	}
 
     protected static String randomName() {
-    	String[] words = {"Fat", "Butt", "Girl", "Guy", "ROFLMFAO", "STUCK", "Bronze", "Black", "Yellow", "River", "Hello", "Kitty", "Small", "5Feet", "Unique", "Funny", "Sad", "Bad", "FutureChallenger"};
+    	String[] words = {"Fat", "Butt", "Girl", "Guy", "ROFLMFAO", "STUCK", "Bronze", "Black", "Yellow", "River", "Hello", "Kitty", "Small", "5Feet", "Unique", "Funny", "Sad", "Bad", 
+    			"FutureChallenger", "Argue", "Number", "Wary", "Meal", "Lumpy", "Look", "Swift", "unnatural", "Cumbersome", "Sore", "Finger", "mother", "Concentrate", "Saw", "Clover", 
+    			"mess up", "Plant", "Shoes", "Fold", "Stimulating", "Goofy", "Puffy", "New", "van", "Suspect", "Turkey", "momentous", "Present", "mammoth", "manage", "Scissors", "Aftermath", 
+    			"Guard", "Regret", "Drunk", "Show", "Happy", "Bang", "High-pitched", "Sheep", "Bear", "Statement", "muddled", "Quicksand", "Certain", "Plane", "Squeeze", "Knot", "medical", 
+    			"Quickest", "Snake", "Trap", "Float", "Slippery", "Fade", "Force", "weary", "Tumble", "Pumped", "Paddle", "Reign", "Burst", "Library", "Coach", "Callous", "Price", "Best", 
+    			"Regular", "Disgusting", "Idiotic", "Leg", "Breathe", "undress", "Classy", "Embarrassed", "wacky", "Amusement", "Excited", "Plastic", "Lace", "Fuzzy", "Match", "Calm", "yard", 
+    			"Bolt", "Trite", "Girls", "Jolly", "Decisive", "Curtain", "Cycle", "Inexpensive", "Receptive", "Spotless", "Gainful", "Jagged", "Snore", "Tense", "Dysfunctional", "Heap", 
+    			"Ajar", "Cultured", "waiting", "Quixotic", "Dress", "Rifle", "Cup", "Juicy", "Bell", "Clap", "Brake", "Statuesque"};
     	String s = "";
-    	for(int i = 0; i < (int)(Math.random()*words.length) + 1; i++) {
-    		s += words[i];
+    	for(int i = 0; i < 4; i++) {
+    		s += words[(int)(Math.random()*words.length)];
     	}
     	return s;
 	}
