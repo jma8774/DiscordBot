@@ -322,7 +322,12 @@ public class App extends ListenerAdapter {
 	}
 
     protected static String randomName() {
-    	return "";
+    	String[] words = {"Fat", "Butt", "Girl", "Guy", "ROFLMFAO", "STUCK", "Bronze", "Black", "Yellow", "River", "Hello", "Kitty", "Small", "5Feet", "Unique", "Funny", "Sad", "Bad", "FutureChallenger"};
+    	String s = "";
+    	for(int i = 0; i < (int)(Math.random()*words.length) + 1; i++) {
+    		s += words[i];
+    	}
+    	return s;
 	}
 
 
