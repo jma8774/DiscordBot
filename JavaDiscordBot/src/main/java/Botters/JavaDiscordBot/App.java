@@ -188,6 +188,7 @@ public class App extends ListenerAdapter {
 		if(e.getUser().getId().equals(botID)) return; // makes sure to not log the events from the bot
 		int pick = getPick(e); // determine which emote they reacted to and return the integer value of it
 		if(pick < 0 || pick > 8) return;
+		String gameOverMsg = "";
 		int r = pick/3; 
 		int c = pick%3;
 		// ill explain how r and c works, lets say you want the middle tile which is in array [1][1], the pick int that corresponds to that is 4
@@ -197,12 +198,14 @@ public class App extends ListenerAdapter {
 			case 1: // x's turn
 				if(ttt[r][c] == ":white_small_square:") {
 					ttt[r][c] = ":heavy_multiplication_x:";
+					gameOverMsg = ticGameOver(e);
 					whosTurn = 2;
 					numTurn ++;
 				}
 			case 2: // o's turn
 				if(ttt[r][c] == ":white_small_square:") {
 					ttt[r][c] = ":white_circle:";
+					gameOverMsg = ticGameOver(e);
 					whosTurn = 1;
 					numTurn ++;
 				}
@@ -215,15 +218,14 @@ public class App extends ListenerAdapter {
 			s += "\n";
 		}
 		ticMsg.editMessage(s).queue();
-		String gameOverMsg = ticGameOver(e);
 		if(!gameOverMsg.isEmpty()) e.getChannel().sendMessage(gameOverMsg).queue();
 	}
 
 	private String ticGameOver(MessageReactionAddEvent e) { // this function determines if the game is over or not, if it is over it returns an empty string
 		String s = "";
-		if(xWin()) {
+		if(whosTurn == 1 && checkWin(":heavy_multiplication_x:")) {
 			s += "X wins!";
-		}else if(oWin()) {
+		}else if(whosTurn == 2 && checkWin(":white_circle:")) {
 			s += "O wins!";
 		}else if(numTurn == 9) s += "This game ended in a draw!";
 		if(!s.isEmpty()) {
@@ -234,14 +236,23 @@ public class App extends ListenerAdapter {
 		return s;
 	}
 	
-
-	private boolean oWin() { // determine if O wins or not
-		String o = ":white_circle:";
-		return false;
-	}
-
-	private boolean xWin() { // determine if X wins or not
-		String x = ":heavy_multiplication_x:";
+	private boolean checkWin(String emote) { // determine who wins based on the string passed in
+		for(int r = 0; r < ttt.length; r++) {
+			for(int c = 0; c < ttt[0].length; c++) {
+				if(ttt[r][c].equals(emote)) {
+					if(r - 1 > -1 && c - 1 > -1 && r + 1 < ttt.length && c + 1 < ttt.length) { // check to make sure not out of bounds
+							if(ttt[r][c].equals(ttt[r-1][c-1]) && ttt[r][c].equals(ttt[r+1][c+1])) return true; // \ diagonal	[0][0] [1][0] [2][0]
+							if(ttt[r][c].equals(ttt[r+1][c-1]) && ttt[r][c].equals(ttt[r-1][c+1])) return true; // / diagonal	[0][1] [1][1] [2][1]
+					}																							//				[0][2] [1][2] [2][2]
+					if(c - 1 > -1 && c + 1 < ttt.length) { // check to make sure not out of bounds
+						if(ttt[r][c].equals(ttt[r][c-1]) && ttt[r][c].equals(ttt[r][c+1])) return true; // vertical	
+					}
+					if(r - 1 > -1 && r + 1 < ttt.length) {
+						if(ttt[r][c].equals(ttt[r-1][c]) && ttt[r][c].equals(ttt[r+1][c])) return true; // horizontal
+					}
+				}
+			}
+		}
 		return false;
 	}
 
