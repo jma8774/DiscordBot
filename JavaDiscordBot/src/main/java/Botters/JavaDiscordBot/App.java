@@ -147,9 +147,7 @@ public class App extends ListenerAdapter {
 		}
     }
     private void briannick(MessageReceivedEvent e) {
-    	
     	if(getMessage(e).startsWith("!") && getMessage(e).indexOf("nick") ==1) {
-    		
     		String[] nick = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","1","2","3","4","5","6","7","8","9","0","!","#","$","%","&","A","B","C","D","E","F","G","H","I","G","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
     		String nickname = "";
     		String nicknames = "";
@@ -164,7 +162,7 @@ public class App extends ListenerAdapter {
     		for(int i = 0; i <10; i++)
     		nicknames += nick[(int)(Math.random()*nick.length)];
     		for(int i = 0; i <10; i++)
-    		nicknamess += nick[(int)(Math.random()*nick.length)];{
+    		nicknamess += nick[(int)(Math.random()*nick.length)];
     		final Guild guild = bot.getGuildById("152954629993398272");
     		String past = guild.getMemberById(Matt).getNickname();
     		String pastmary = guild.getMemberById(Mary).getNickname();
@@ -177,11 +175,9 @@ public class App extends ListenerAdapter {
     		sendMessage(e, "**" + pastmary + "**" + " changed to " + bot.getUserById(Mary).getAsMention());
     		sendMessage(e, "**" + pastsam + "**" + " changed to " + bot.getUserById(Sam).getAsMention());
     		sendMessage(e, "**Steven still **" + bot.getUserById(Steven).getAsMention() + bot.getEmoteById(KAPPA).getAsMention());
-    				
-    			}
-    		}
     	}
-    		
+    }
+    	
     private void brianroll(MessageReceivedEvent e) {
     	if(getMessage(e).startsWith("!") && getMessage(e).indexOf("roll") == 1) {
     		String Rollss = getMessage(e).substring(6);
@@ -196,49 +192,35 @@ public class App extends ListenerAdapter {
     	String hands = "I chose ";
     	String selfhand = "You chose ";
     	hands +=  hand[(int)(Math.random()*hand.length)];
-    	if(getMessage(e).startsWith("`") && getMessage(e).indexOf("rps") == 1){
-    	if(getMessage(e).substring(5).equalsIgnoreCase("rock")) {
-    		sendMessage(e, selfhand + "***" + getMessage(e).substring(5) + "***" + " and "+ hands);return;
-    			}
-    	if(getMessage(e).substring(5).equalsIgnoreCase("paper")) {
-    		sendMessage(e, selfhand + "***" + getMessage(e).substring(5) + "***" + " and "+ hands);return;
-    			}
-    	if(getMessage(e).substring(5).equalsIgnoreCase("scissors")) {
-    		sendMessage(e, selfhand + "***" + getMessage(e).substring(5) + "***" + " and "+ hands);return;
-    			}
-    	if(!getMessage(e).substring(5).equalsIgnoreCase("rock") && !getMessage(e).substring(5).equalsIgnoreCase("paper") && !getMessage(e).substring(5).equalsIgnoreCase("scissors")) {
-    		sendMessage(e, "Please pick rock, paper, or scissors");
-    			}
-    		}	
-    	}
+    	if(getMessage(e).startsWith("`") && getMessage(e).indexOf("rps") == 1 && getMessage(e).length() > 6){
+	    	if(getMessage(e).substring(5).equalsIgnoreCase("rock")) {
+	    		sendMessage(e, selfhand + "***" + getMessage(e).substring(5) + "***" + " and "+ hands);
+	    		return;
+	    	}
+	    	if(getMessage(e).substring(5).equalsIgnoreCase("paper")) {
+	    		sendMessage(e, selfhand + "***" + getMessage(e).substring(5) + "***" + " and "+ hands);
+	    		return;
+	    	}
+	    	if(getMessage(e).substring(5).equalsIgnoreCase("scissors")) {
+	    		sendMessage(e, selfhand + "***" + getMessage(e).substring(5) + "***" + " and "+ hands);
+	    		return;
+	    	}
+	    	if(!getMessage(e).substring(5).equalsIgnoreCase("rock") && !getMessage(e).substring(5).equalsIgnoreCase("paper") && !getMessage(e).substring(5).equalsIgnoreCase("scissors")) {
+	    		sendMessage(e, "Please pick rock, paper, or scissors");
+	    	}
+    	}	
+    }
+    
     private void checkrps(MessageReceivedEvent e) {
-    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose rock and I chose scissors")) {
-    		sendMessage(e, "***You Win***");
-    	}
-    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose rock and I chose paper")) {
-    		sendMessage(e, "***You Lose***");
-    	}
-    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose rock and I chose rock")) {
-    		sendMessage(e, "***Draw***");
-    	}
-    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose paper and I chose scissors")) {
-    		sendMessage(e, "***You Lose***");
-    	}
-    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose paper and I chose paper")) {
-    		sendMessage(e, "***Draw***");
-    	}
-    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose paper and I chose rock")) {
-    		sendMessage(e, "***You Win***");
-    	}
-    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose scissors and I chose scissors")) {
-    		sendMessage(e, "***Draw***");
-    	}
-    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose scissors and I chose paper")) {
-    		sendMessage(e, "***You Win***");
-    	}
-    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose scissors and I chose rock")) {
-    		sendMessage(e, "***You Lose***");
-    	}
+    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose rock and I chose scissors")) sendMessage(e, "***You Win***");
+    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose rock and I chose paper")) sendMessage(e, "***You Lose***");
+    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose rock and I chose rock")) sendMessage(e, "***Draw***");
+    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose paper and I chose scissors")) sendMessage(e, "***You Lose***");
+    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose paper and I chose paper")) sendMessage(e, "***Draw***");
+    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose paper and I chose rock")) sendMessage(e, "***You Win***");
+    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose scissors and I chose scissors")) sendMessage(e, "***Draw***");
+    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose scissors and I chose paper")) sendMessage(e, "***You Win***");
+    	if(e.getMessage().getContentStripped().equalsIgnoreCase("You chose scissors and I chose rock")) sendMessage(e, "***You Lose***");
     }
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
