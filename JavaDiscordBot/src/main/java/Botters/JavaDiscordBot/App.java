@@ -65,7 +65,7 @@ public class App extends ListenerAdapter {
 	
 	
     public static void main( String[] args ) throws LoginException, IllegalArgumentException, InterruptedException, RateLimitedException {
-    	bot = new JDABuilder(AccountType.BOT).setToken("").buildBlocking();
+    	bot = new JDABuilder(AccountType.BOT).setToken("a").buildBlocking();
     	bot.addEventListener(new App());
 //    	begForDonations(1800000); // 30 minutes
 //    	randomName(2000);
