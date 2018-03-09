@@ -225,7 +225,10 @@ public class App extends ListenerAdapter {
     	String hands = "I chose ";
     	String selfhand = "You chose ";
     	hands +=  hand[(int)(Math.random()*hand.length)];
-    	if(getMessage(e).startsWith("`") && getMessage(e).indexOf("rps") == 1 && getMessage(e).length() > 6){
+    	if(getMessage(e).startsWith("`rps")){
+    		if(getMessage(e).length() == 4) {
+    		sendMessage(e, "Please pick rock, paper, or scissors");return;
+    		}
 	    	if(getMessage(e).substring(5).equalsIgnoreCase("rock")) {
 	    		sendMessage(e, selfhand + "***" + getMessage(e).substring(5) + "***" + " and "+ hands);
 	    		return;
@@ -239,7 +242,7 @@ public class App extends ListenerAdapter {
 	    		return;
 	    	}
 	    	if(!getMessage(e).substring(5).equalsIgnoreCase("rock") && !getMessage(e).substring(5).equalsIgnoreCase("paper") && !getMessage(e).substring(5).equalsIgnoreCase("scissors")) {
-	    		sendMessage(e, "Please pick rock, paper, or scissors");
+	    		sendMessage(e, "Please pick rock, paper, or scissors");return;
 	    	}
     	}	
     }
