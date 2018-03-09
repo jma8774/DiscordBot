@@ -71,20 +71,30 @@ public class App extends ListenerAdapter {
     	stop = false;
     	checkCurses(e);
     	if(stop) return;
+    	
+    	// RUSSIAN //
     	initializeRR(e);
+    	// RUSSIAN //
+    	
     	checkSlap(e);
     	checkHelp(e);
     	checkRoll(e);
     	checkHardstuck(e);
 		checkGreets(e);
+		
+		// BRIAN STUFF //
 		brianroll(e); //command for roll #
 		brianrps(e); //command for rps
 		checkrps(e); //outcome for rps
 		briannick(e);
 		brianbj(e);
 		briancheckbj(e);
+		// BRIAN STUFF //
+		
+		// TIC-TAC-TOE //
 		initializeTicTacToe(e); //starts the tic-tac-toe game by sending the board message
 		addReactionsTic(e); //add emotes to the message once the event is recieved
+		// TIC-TAC-TOE //
     }
     
 	@Override
