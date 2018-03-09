@@ -63,6 +63,8 @@ public class App extends ListenerAdapter {
 	private static User BJplayer1;
 	private static User BJplayer2;
 	private static User BJTurn;
+	private static List<String> P1cards;
+	private static List<String> P2cards;
 	
 	
     public static void main( String[] args ) throws LoginException, IllegalArgumentException, InterruptedException, RateLimitedException {
@@ -148,35 +150,27 @@ public class App extends ListenerAdapter {
     
     private void brianbj(MessageReceivedEvent e) {
     	String[] Cards = {"A" , "2" , "3" , "4" , "5" , "6" , "7" , "8" , "9" , "10" ,"J" , "Q", "K"};
-    	String card1 = "";
-    	String card2 = "";
-    	String card3 = "";
-    	String NPCcard1 = "";
-    	String NPCcard2 = "";
-    	String NPCcard3 = "";
-    	for(int i = 0; i<1; i++)
-    	card1 += Cards[(int)(Math.random()*Cards.length)];
-    	card2 += Cards[(int)(Math.random()*Cards.length)];
-    	card3 += Cards[(int)(Math.random()*Cards.length)];
-    	NPCcard1 += Cards[(int)(Math.random()*Cards.length)];
-    	NPCcard2 += Cards[(int)(Math.random()*Cards.length)];
-    	NPCcard3 += Cards[(int)(Math.random()*Cards.length)];
     	if(getMessage(e).startsWith("!blackjack") && e.getMessage().getMentionedUsers().size() > 0) {
     		BJplayer1 = e.getMember().getUser();
         	BJplayer2 = e.getMessage().getMentionedUsers().get(0);
         	BJTurn = e.getAuthor();
-    	sendMessage(e, BJplayer1.getAsMention() + " Hand: \n" 
-    					+ "`" + card1 + "`" 
+        	P1cards = new ArrayList<String>(); // new list of p1 cards
+        	P1cards.add(Cards[(int)(Math.random()*Cards.length)]); // add card 1 to player 1 hand
+        	P1cards.add(Cards[(int)(Math.random()*Cards.length)]); // add card 2 to player 1 hand
+        	P2cards = new ArrayList<String>(); // new list of p2 cards 
+        	P2cards.add(Cards[(int)(Math.random()*Cards.length)]);
+        	P2cards.add(Cards[(int)(Math.random()*Cards.length)]);
+        	
+        	sendMessage(e, BJplayer1.getAsMention() + " Hand: \n" 
+    					+ "`" + P1cards.get(0) + "`" 
     					+ " " 
-    					+ "`" + card2 + "`"
+    					+ "`" + P1cards.get(1) + "`"
     					+ "\n"+ BJplayer2.getAsMention() + "hand: \n"
-    					+ "`" + NPCcard1 + "`" 
+    					+ "`" + P2cards.get(0) + "`" 
     					+ " " 
-    					+ "`" + NPCcard2 + "`"
+    					+ "`" + P2cards.get(1) + "`"
     					);
     		}
-    	
-
     	if(e.getAuthor().isBot()) {
     		savedhand = e.getMessage();
     	}	
@@ -186,55 +180,18 @@ public class App extends ListenerAdapter {
     
     private void briancheckbj (MessageReceivedEvent e) {
     	String[] Cards = {"A" , "2" , "3" , "4" , "5" , "6" , "7" , "8" , "9" , "10" ,"J" , "Q", "K"};
-    	String card1 = "";
-    	String card2 = "";
-    	String card3 = "";
-    	String NPCcard1 = "";
-    	String NPCcard2 = "";
-    	String NPCcard3 = "";
-    	for(int i = 0; i<1; i++)
-    	card1 += Cards[(int)(Math.random()*Cards.length)];
-    	card2 += Cards[(int)(Math.random()*Cards.length)];
-    	card3 += Cards[(int)(Math.random()*Cards.length)];
-    	NPCcard1 += Cards[(int)(Math.random()*Cards.length)];
-    	NPCcard2 += Cards[(int)(Math.random()*Cards.length)];
-    	NPCcard3 += Cards[(int)(Math.random()*Cards.length)];
-    	if(e.getAuthor() != BJTurn) return;{
+    	if(e.getAuthor() != BJTurn) return;
     	if(getMessage(e).startsWith("!") && getMessage(e).indexOf("hit")==1) {
     		if(e.getAuthor() != BJTurn) return;
     		if(BJTurn == BJplayer1) {
-			savedhand.editMessage(BJplayer1.getAsMention() + " Hand: \n" 
-					+ "`" + card1 + "`" 
-					+ " " 
-					+ "`" + card2 + "`"
-					+ " " 
-					+ "`" + card3 + "`"
-					+ "\n" + BJplayer2.getAsMention() + " Hand:\n"
-					+ "`" + NPCcard1 + "`" 
-					+ " " 
-					+ "`" + NPCcard2 + "`"
-					+ " " 
-					+ "`" + NPCcard3 + "`").queue();
-					BJTurn = BJplayer2;
+    			P1cards.add(Cards[(int)(Math.random()*Cards.length)]);
+				BJTurn = BJplayer2;
+    		} else{
+    			P2cards.add(Cards[(int)(Math.random()*Cards.length)]);
+    			BJTurn = BJplayer1;
     		}
-					else{
-    			savedhand.editMessage(BJplayer1.getAsMention() + " Hand: \n" 
-    				+ "`" + card1 + "`" 
-    				+ " " 
-    				+ "`" + card2 + "`"
-    				+ " " 
-    				+ "`" + card3 + "`"
-    				+ "\n" + BJplayer2.getAsMention() + " Hand:\n"
-    				+ "`" + NPCcard1 + "`" 
-    				+ " " 
-    				+ "`" + NPCcard2 + "`"
-    				+ " " 
-    				+ "`" + NPCcard3 + "`").queue();
-    				BJTurn = BJplayer1;
-    				}
-    			}
-    		} 
     	}
+    }
     
     private void briannick(MessageReceivedEvent e) {
     	if(getMessage(e).startsWith("!") && getMessage(e).indexOf("nick") ==1) {
