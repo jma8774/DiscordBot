@@ -35,6 +35,7 @@ public class App extends ListenerAdapter {
 	private static User player1;
 	private static User player2;
 	private static Message ticMsg;
+	private static Message savedhand;
 	
 	//emote string and unicode
 	private final String KAPPA = "420687983365193729";
@@ -73,6 +74,7 @@ public class App extends ListenerAdapter {
 		checkrps(e); //outcome for rps
 		briannick(e);
 		brianbj(e);
+		briancheckbj(e);
 		initializeTicTacToe(e); //starts the tic-tac-toe game by sending the board message
 		addReactionsTic(e); //add emotes to the message once the event is recieved
     }
@@ -84,17 +86,21 @@ public class App extends ListenerAdapter {
     
     
     private void brianbj(MessageReceivedEvent e) {
-    	if(getMessage(e).startsWith("!") && getMessage(e).indexOf("blackjack")==1) {
     	String[] Cards = {"A" , "2" , "3" , "4" , "5" , "6" , "7" , "8" , "9" , "10" ,"J" , "Q", "K"};
     	String card1 = "";
     	String card2 = "";
+    	String card3 = "";
     	String NPCcard1 = "";
     	String NPCcard2 = "";
+    	String NPCcard3 = "";
     	for(int i = 0; i<1; i++)
     	card1 += Cards[(int)(Math.random()*Cards.length)];
     	card2 += Cards[(int)(Math.random()*Cards.length)];
+    	card3 += Cards[(int)(Math.random()*Cards.length)];
     	NPCcard1 += Cards[(int)(Math.random()*Cards.length)];
     	NPCcard2 += Cards[(int)(Math.random()*Cards.length)];
+    	NPCcard3 += Cards[(int)(Math.random()*Cards.length)];
+    	if(getMessage(e).startsWith("!") && getMessage(e).indexOf("blackjack")==1) {
     	sendMessage(e, "Your Hand: \n" 
     					+ "`" + card1 + "`" 
     					+ " " 
@@ -103,10 +109,42 @@ public class App extends ListenerAdapter {
     					+ "`" + NPCcard1 + "`" 
     					+ " " 
     					+ "`" + NPCcard2 + "`");
+    	}
+    	if(e.getAuthor().isBot()) {
+    		savedhand = e.getMessage();
+    	}	
+    }
+    	
+    
+    private void briancheckbj (MessageReceivedEvent e) {
+    	String[] Cards = {"A" , "2" , "3" , "4" , "5" , "6" , "7" , "8" , "9" , "10" ,"J" , "Q", "K"};
+    	String card1 = "";
+    	String card2 = "";
+    	String card3 = "";
+    	String NPCcard1 = "";
+    	String NPCcard2 = "";
+    	String NPCcard3 = "";
+    	for(int i = 0; i<1; i++)
+    	card1 += Cards[(int)(Math.random()*Cards.length)];
+    	card2 += Cards[(int)(Math.random()*Cards.length)];
+    	card3 += Cards[(int)(Math.random()*Cards.length)];
+    	NPCcard1 += Cards[(int)(Math.random()*Cards.length)];
+    	NPCcard2 += Cards[(int)(Math.random()*Cards.length)];
+    	NPCcard3 += Cards[(int)(Math.random()*Cards.length)];
     	if(getMessage(e).startsWith("!") && getMessage(e).indexOf("hit")==1) {
-    		sendMessage(e, "test");
-    	}
-    	}
+			savedhand.editMessage("Your Hand: \n" 
+					+ "`" + card1 + "`" 
+					+ " " 
+					+ "`" + card2 + "`"
+					+ " " 
+					+ "`" + card3 + "`"
+					+ "\nBots Hand: \n"
+					+ "`" + NPCcard1 + "`" 
+					+ " " 
+					+ "`" + NPCcard2 + "`"
+					+ " " 
+					+ "`" + NPCcard3 + "`").queue();
+		}
     }
     private void briannick(MessageReceivedEvent e) {
     	
@@ -272,7 +310,7 @@ public class App extends ListenerAdapter {
 			ticRunning = false;
 			numTurn = 0;
 		}
-		return s;
+		return s; 
 	}
 	
 	private boolean checkWin(String emote) { // determine who wins based on the string passed in
