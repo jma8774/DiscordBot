@@ -1,5 +1,6 @@
 package Botters.JavaDiscordBot;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -26,6 +27,12 @@ public class App extends ListenerAdapter {
 	private boolean stop;
 	private static JDA bot;
 	private final static String botID = "420395938272641034";
+	
+	//russian roulette variables
+	private static Message rrMsg;
+	private static boolean russianStarted;
+	private List<User> users;
+	private final String CHECK = "✔";
 	
 	// tic-tac-toe variables
 	private String[][] ttt;
@@ -64,6 +71,7 @@ public class App extends ListenerAdapter {
     	stop = false;
     	checkCurses(e);
     	if(stop) return;
+    	initializeRR(e);
     	checkSlap(e);
     	checkHelp(e);
     	checkRoll(e);
@@ -79,11 +87,36 @@ public class App extends ListenerAdapter {
 		addReactionsTic(e); //add emotes to the message once the event is recieved
     }
     
-    @Override
-    public void onMessageReactionAdd(MessageReactionAddEvent e) {
-    	ticMove(e); //when people touch the emotes, it would trigger this function if there is a tic-tac-toe game going on
-    }
-    
+	@Override
+	public void onMessageReactionAdd(MessageReactionAddEvent e) {
+		ticMove(e); //when people touch the emotes, it would trigger this function if there is a tic-tac-toe game going on
+		rrReact(e);
+	}
+	
+    private void rrReact(MessageReactionAddEvent e) {
+    	if(!russianStarted) return; // stops running the function when the game is not running
+		if(e.getUser().getId().equals(botID)) return; // makes sure to not log the events from the bot
+		if(e.getReactionEmote().getName().equals(CHECK) && users.size() < 6 && !users.contains(e.getUser())) {
+			users.add(e.getUser());
+			rrMsg.editMessage(rrMsg.getContentDisplay() + "\n" + e.getUser().getAsMention() + " has joined the roulette. There are " + users.size() + " users participating.").queue();
+		}
+		
+	}
+
+
+	private void initializeRR(MessageReceivedEvent e) {
+		if(russianStarted && e.getAuthor().isBot()) {
+			e.getMessage().addReaction(CHECK).queue();
+			rrMsg = e.getMessage();
+		}
+		if(e.getAuthor().isBot()) return;
+		if(getMessage(e).startsWith("`russian") && !russianStarted) {
+			sendMessage(e, ":gun: React to join Russian Roulette. Up to six people can join. Game will start in 10. :gun: \n ");
+			users = new ArrayList<User>();
+			russianStarted = true;
+		}
+	}
+
     
     private void brianbj(MessageReceivedEvent e) {
     	String[] Cards = {"A" , "2" , "3" , "4" , "5" , "6" , "7" , "8" , "9" , "10" ,"J" , "Q", "K"};
@@ -227,8 +260,8 @@ public class App extends ListenerAdapter {
     //START OF TIC-TAC-TOE CODE
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	private void addReactionsTic(MessageReceivedEvent e) {
-		if(!e.getAuthor().isBot())return;
-		if(getMessage(e).startsWith(":")) {
+		if(!e.getAuthor().isBot()) return;
+		if(getMessage(e).startsWith(":white_small_square:")) {
 			e.getMessage().addReaction(N1).queue();
 			e.getMessage().addReaction(N2).queue();
 			e.getMessage().addReaction(N3).queue();
