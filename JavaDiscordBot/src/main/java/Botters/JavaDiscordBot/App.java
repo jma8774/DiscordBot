@@ -58,6 +58,12 @@ public class App extends ListenerAdapter {
 	private final String N8 = "8⃣";
 	private final String N9 = "9⃣";
 	
+	//BlackJack variables
+	private static User BJplayer1;
+	private static User BJplayer2;
+	private static User BJTurn;
+	
+	
     public static void main( String[] args ) throws LoginException, IllegalArgumentException, InterruptedException, RateLimitedException {
     	bot = new JDABuilder(AccountType.BOT).setToken("").buildBlocking();
     	bot.addEventListener(new App());
@@ -143,20 +149,27 @@ public class App extends ListenerAdapter {
     	NPCcard1 += Cards[(int)(Math.random()*Cards.length)];
     	NPCcard2 += Cards[(int)(Math.random()*Cards.length)];
     	NPCcard3 += Cards[(int)(Math.random()*Cards.length)];
-    	if(getMessage(e).startsWith("!") && getMessage(e).indexOf("blackjack")==1) {
-    	sendMessage(e, "Your Hand: \n" 
+    	if(getMessage(e).startsWith("!blackjack") && e.getMessage().getMentionedUsers().size() > 0) {
+    		BJplayer1 = e.getMember().getUser();
+        	BJplayer2 = e.getMessage().getMentionedUsers().get(0);
+        	BJTurn = e.getAuthor();
+    	sendMessage(e, BJplayer1.getAsMention() + " Hand: \n" 
     					+ "`" + card1 + "`" 
     					+ " " 
     					+ "`" + card2 + "`"
-    					+ "\nBots Hand: \n"
+    					+ "\n"+ BJplayer2.getAsMention() + "hand: \n"
     					+ "`" + NPCcard1 + "`" 
     					+ " " 
-    					+ "`" + NPCcard2 + "`");
-    	}
+    					+ "`" + NPCcard2 + "`"
+    					);
+    		}
+    	
+
     	if(e.getAuthor().isBot()) {
     		savedhand = e.getMessage();
     	}	
     }
+
     	
     
     private void briancheckbj (MessageReceivedEvent e) {
@@ -174,21 +187,43 @@ public class App extends ListenerAdapter {
     	NPCcard1 += Cards[(int)(Math.random()*Cards.length)];
     	NPCcard2 += Cards[(int)(Math.random()*Cards.length)];
     	NPCcard3 += Cards[(int)(Math.random()*Cards.length)];
+    	if(e.getAuthor() != BJTurn) return;{
     	if(getMessage(e).startsWith("!") && getMessage(e).indexOf("hit")==1) {
-			savedhand.editMessage("Your Hand: \n" 
+    		if(e.getAuthor() != BJTurn) return;
+    		if(BJTurn == BJplayer1) {
+			savedhand.editMessage(BJplayer1.getAsMention() + " Hand: \n" 
 					+ "`" + card1 + "`" 
 					+ " " 
 					+ "`" + card2 + "`"
 					+ " " 
 					+ "`" + card3 + "`"
-					+ "\nBots Hand: \n"
+					+ "\n" + BJplayer2.getAsMention() + " Hand:\n"
 					+ "`" + NPCcard1 + "`" 
 					+ " " 
 					+ "`" + NPCcard2 + "`"
 					+ " " 
 					+ "`" + NPCcard3 + "`").queue();
-		}
-    }
+					BJTurn = BJplayer2;
+    		}
+					else{
+    			savedhand.editMessage(BJplayer1.getAsMention() + " Hand: \n" 
+    				+ "`" + card1 + "`" 
+    				+ " " 
+    				+ "`" + card2 + "`"
+    				+ " " 
+    				+ "`" + card3 + "`"
+    				+ "\n" + BJplayer2.getAsMention() + " Hand:\n"
+    				+ "`" + NPCcard1 + "`" 
+    				+ " " 
+    				+ "`" + NPCcard2 + "`"
+    				+ " " 
+    				+ "`" + NPCcard3 + "`").queue();
+    				BJTurn = BJplayer1;
+    				}
+    			}
+    		} 
+    	}
+    
     private void briannick(MessageReceivedEvent e) {
     	if(getMessage(e).startsWith("!") && getMessage(e).indexOf("nick") ==1) {
     		String[] nick = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","1","2","3","4","5","6","7","8","9","0","!","#","$","%","&","A","B","C","D","E","F","G","H","I","G","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
