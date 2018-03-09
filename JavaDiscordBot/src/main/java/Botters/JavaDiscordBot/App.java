@@ -31,6 +31,7 @@ public class App extends ListenerAdapter {
 	//russian roulette variables
 	private static Message rrMsg;
 	private static boolean russianStarted;
+	private static int numPlayersRR = 0;
 	private List<User> users;
 	private final String CHECK = "✔";
 	
@@ -112,11 +113,17 @@ public class App extends ListenerAdapter {
     private void rrReact(MessageReactionAddEvent e) {
     	if(!russianStarted) return; // stops running the function when the game is not running
 		if(e.getUser().getId().equals(botID)) return; // makes sure to not log the events from the bot
-		if(e.getReactionEmote().getName().equals(CHECK) && users.size() < 6 && !users.contains(e.getUser())) {
+		if(e.getReactionEmote().getName().equals(CHECK) && users.size() < numPlayersRR && !users.contains(e.getUser())) {
 			users.add(e.getUser());
 			rrMsg.editMessage(rrMsg.getContentDisplay() + "\n" + e.getUser().getAsMention() + " has joined the roulette. There are " + users.size() + " users participating.").queue();
+			if(users.size() >= numPlayersRR) {
+				String died = users.get((int)(Math.random()*users.size())).getAsMention();
+				String[] list = {"Unlucky, " + died + " got shot and died a miserable death. :cry:", died + " got shot in the eye and died.", "The bullet hit the wall and ricochet backward, killing " + died, "The bot sneezed and shot twice at " + died + " and killed him. Unlucky."};
+				rrMsg.editMessage(list[(int)(Math.random()*list.length)]).queue();
+				numPlayersRR = 0;
+				russianStarted = false;
+			}
 		}
-		
 	}
 
 
@@ -127,9 +134,14 @@ public class App extends ListenerAdapter {
 		}
 		if(e.getAuthor().isBot()) return;
 		if(getMessage(e).startsWith("`russian") && !russianStarted) {
-			sendMessage(e, ":gun: React to join Russian Roulette. Up to six people can join. Game will start in 10. :gun: \n ");
-			users = new ArrayList<User>();
-			russianStarted = true;
+			if(getMessage(e).length() > 8) {
+				numPlayersRR = Integer.parseInt(getMessage(e).substring(9, 10));
+				sendMessage(e, ":gun: React to join Russian Roulette. Game will start when there's " + numPlayersRR + " people. :gun: \n ");
+				users = new ArrayList<User>();
+				russianStarted = true;
+			} else {
+				sendMessage(e, "``` `russian #players to start a game```");
+			}
 		}
 	}
 
@@ -479,7 +491,8 @@ public class App extends ListenerAdapter {
 					"`slap @user @user1 - slap someone with something \n" +
 					"`tic @someone - starts a tic-tac-toe game with that person\n" +
 					"`tic end - to end the tic-tac-toe game \n" +
-					"`rps - play rock, paper, scissors with bot" +
+					"`rps - play rock, paper, scissors with bot\n" +
+					"`russian # - starts russian roulette game with # of players\n" +
 					"```");
 		}
 	}
