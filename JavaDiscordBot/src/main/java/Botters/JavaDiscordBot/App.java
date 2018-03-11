@@ -188,8 +188,19 @@ public class App extends ListenerAdapter {
 				BJTurn = BJplayer2;
     		} else{
     			P2cards.add(Cards[(int)(Math.random()*Cards.length)]);
+    			
     			BJTurn = BJplayer1;
     		}
+    		
+    		String s = BJplayer1.getAsMention() + " hand: \n"; // form the string after you add card to whoever hit
+			for(int i = 0; i < P1cards.size(); i ++) {
+				s += "`" + P1cards.get(i) + "` ";
+			}
+			s += "\n" + BJplayer2.getAsMention() + " hand: \n";
+			for(int i = 0; i < P2cards.size(); i ++) {
+				s += "`" + P2cards.get(i) + "` ";
+			}
+			sendMessage(e, s); // then you send it
     	}
     }
     
